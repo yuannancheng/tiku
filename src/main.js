@@ -10,6 +10,10 @@ import './assets/styles/border.css'
 Vue.config.productionTip = false
 fastClick.attach(document.body)
 
+// document.body.addEventListener('touchmove', (e) => {
+//   e.preventDefault()
+// }, { passive: false })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
