@@ -40,7 +40,7 @@
 <script>
 export default {
   name: 'HomeHeader',
-  data: function () {
+  data () {
     return {
       moreListShow: false,
       editBtnContent: '编辑'
@@ -93,6 +93,7 @@ export default {
 <!-- scoped 仅对当前组件产生影响 -->
 <style lang="stylus" scoped>
   @import '~styles/varibles.styl'
+  @import '~styles/moreList.styl'
   .header
     position: relative
     height: 1rem
@@ -102,60 +103,35 @@ export default {
     background-color: #fff
     box-shadow: #ccc 0 0 7px
     user-select: none
-
     *
       display: inline-block
       padding: .1rem
       font-size: .35rem
       cursor: pointer
-
     .header-title,
     .header-left,
     .header-right
       position: absolute
       top: 50%
       transform: translateY(-50%)
-
     .header-title
       position: relative
       color: #333
       font-size: .4rem
       font-weight: 900
       cursor: auto
-
     .header-left
       left: .15rem
-
     .header-right
       font-size: .45rem
       right: 0
       padding: .3rem
-
       .header-more-list
-        display: inline-block
-        position: absolute
-        padding: 0
-        right: .2rem
-        top: 120%
-        --animate-duration: 0.3s
-        transform-origin: right top
-        cursor: auto
-
+        moreList()
         ul
-          padding: .15rem .1rem
-          background-color: #fff
-          border: #eee 1px solid
-          border-radius: .1rem
-          cursor: auto
-
+          moreListChild()
           li
-            position: relative
-            display: block
-            margin: .1rem 0
-            padding: .05rem
-            word-break: keep-all
-            overflow: hidden
-
+            moreListGrandChild()
             .importFileBtn
               position: absolute
               top: 0
