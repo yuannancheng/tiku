@@ -2,11 +2,24 @@
   <div class="header">
     <div class="header-left" @click="handleFeedBackClick">反馈</div>
     <div class="header-title">理论题库</div>
-    <div class="header-right">
-      <div class="header-import">
-        导入
-        <div class="header-import-list">
+    <div
+      class="header-right iconfont"
+      @click="handleMoreShow"
+      v-clickoutside="handleMoreOutClick"
+    >
+      &#xe623;
+      <transition
+        name="more-list"
+        enter-active-class="animate__animated animate__zoomIn"
+        leave-active-class="animate__animated animate__zoomOut"
+      >
+        <div
+          class="header-more-list"
+          v-show="moreListShow"
+          @click.stop
+        >
           <ul>
+            <li>{{editBtnContent}}</li>
             <li title="仅支持json格式文件">导入题库
               <input
                 class="importFileBtn"
@@ -19,8 +32,7 @@
             <li>下载工具</li>
           </ul>
         </div>
-      </div>
-      <div>{{editBtnContent}}</div>
+      </transition>
     </div>
   </div>
 </template>
@@ -30,6 +42,7 @@ export default {
   name: 'HomeHeader',
   data: function () {
     return {
+      moreListShow: false,
       editBtnContent: '编辑'
     }
   },
@@ -39,6 +52,39 @@ export default {
     },
     importFileAddressChange: function (e) {
       console.log(e.target.files)
+    },
+    handleMoreShow: function () {
+      this.moreListShow = !this.moreListShow
+    },
+    handleMoreOutClick: function () {
+      this.moreListShow = false
+    }
+  },
+  // 元素外点击事件
+  // 代码来自 https://blog.csdn.net/qq_39785489/article/details/103299462
+  directives: {
+    clickoutside: { // 初始化指令
+      bind (el, binding, vnode) {
+        function documentHandler (e) {
+          // 这里判断点击的元素是否是本身，是本身，则返回
+          if (el.contains(e.target)) {
+            return false
+          }
+          // 判断指令中是否绑定了函数
+          if (binding.expression) {
+            // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+            binding.value(e)
+          }
+        }
+        // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+        el.__vueClickOutside__ = documentHandler
+        document.addEventListener('click', documentHandler)
+      },
+      update () {},
+      unbind (el, binding) { // 解除事件监听
+        document.removeEventListener('click', el.__vueClickOutside__)
+        delete el.__vueClickOutside__
+      }
     }
   }
 }
@@ -46,12 +92,13 @@ export default {
 
 <!-- scoped 仅对当前组件产生影响 -->
 <style lang="stylus" scoped>
+  @import '~styles/varibles.styl'
   .header
     position: relative
     height: 1rem
     font-size: 0
     text-align: center
-    color: #4ea1db
+    color: $btnTxtColor
     background-color: #fff
     box-shadow: #ccc 0 0 7px
     user-select: none
@@ -80,39 +127,38 @@ export default {
       left: .15rem
 
     .header-right
-      right: .15rem
-      padding: 0
+      font-size: .45rem
+      right: 0
+      padding: .3rem
 
-      .header-import
-        position: relative
+      .header-more-list
+        display: inline-block
+        position: absolute
+        padding: 0
+        right: .2rem
+        top: 120%
+        --animate-duration: 0.3s
+        transform-origin: right top
+        cursor: auto
 
-        .header-import-list
-          display: none
-          position: absolute
-          left: 50%
-          top: 100%
-          min-width: 2rem
-          padding: .4rem 0 0
-          transform: translateX(-50%)
+        ul
+          padding: .15rem .1rem
+          background-color: #fff
+          border: #eee 1px solid
+          border-radius: .1rem
           cursor: auto
 
-          ul
-            padding: .15rem 0 .05rem
-            background-color: #fff
-            border: #eee 1px solid
-            border-radius: .1rem
-            cursor: auto
+          li
+            position: relative
+            display: block
+            margin: .1rem 0
+            padding: .05rem
+            word-break: keep-all
+            overflow: hidden
 
-            li
-              position: relative
-              word-break: keep-all
-              overflow: hidden
+            .importFileBtn
+              position: absolute
+              top: 0
+              right: 0
 
-              .importFileBtn
-                position: absolute
-                top: 0
-                right: 0
-
-      .header-import:hover .header-import-list
-        display: inline-block
 </style>
