@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import clickoutside from '@functions/clickoutside'
 export default {
   name: 'HomeHeader',
   data () {
@@ -60,43 +61,19 @@ export default {
       this.moreListShow = false
     }
   },
-  // 元素外点击事件
-  // 代码来自 https://blog.csdn.net/qq_39785489/article/details/103299462
   directives: {
-    clickoutside: { // 初始化指令
-      bind (el, binding, vnode) {
-        function documentHandler (e) {
-          // 这里判断点击的元素是否是本身，是本身，则返回
-          if (el.contains(e.target)) {
-            return false
-          }
-          // 判断指令中是否绑定了函数
-          if (binding.expression) {
-            // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
-            binding.value(e)
-          }
-        }
-        // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
-        el.__vueClickOutside__ = documentHandler
-        document.addEventListener('click', documentHandler)
-      },
-      update () {},
-      unbind (el, binding) { // 解除事件监听
-        document.removeEventListener('click', el.__vueClickOutside__)
-        delete el.__vueClickOutside__
-      }
-    }
+    clickoutside
   }
 }
 </script>
 
 <!-- scoped 仅对当前组件产生影响 -->
 <style lang="stylus" scoped>
-  @import '~styles/varibles.styl'
-  @import '~styles/moreList.styl'
+  @import '~@styles/varibles.styl'
+  @import '~@styles/moreList.styl'
   .header
     position: relative
-    height: 1rem
+    height: .95rem
     font-size: 0
     text-align: center
     color: $btnTxtColor
@@ -106,7 +83,7 @@ export default {
     *
       display: inline-block
       padding: .1rem
-      font-size: .35rem
+      font-size: .34rem
       cursor: pointer
     .header-title,
     .header-left,

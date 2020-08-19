@@ -5,11 +5,12 @@ import Home from '@/pages/home/Home'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Home',
-      component: Home
-    }
-  ]
+  routes: [{
+    path: '/',
+    name: 'Home',
+    component: Home
+  }],
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })

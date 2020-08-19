@@ -1,3 +1,56 @@
 export default {
-  TestData: []
+  TestData: [],
+  UserNote: {},
+  UserData: {}
 }
+/*
+UserNote结构：
+{
+  0: {
+    0: "第一个题库第一题的笔记",
+    1: "第一个题库第二题的笔记"
+  },
+  1: {
+    0: "第二个题库第一题的笔记",
+    1: "第二个题库第二题的笔记"
+  }
+}
+
+UserData结构：
+{
+  0: { // 第一个题库
+    "lastIndex": 146, // 上次做在第147题
+    data: {
+      0: {
+        "userSelect": "错" // 上次用户选择的答案是"错"
+        "fraction": 1 // 得分
+      },
+      99: {
+        "userSelect": "A" // 上次用户选择的答案是"A"
+        "fraction": 1 // 得分
+      },
+      146: {
+        "userSelect": ["A", "B"] // 上次用户选择的答案是"A、B"
+        "fraction": 0.45 // 得分
+      }
+    }
+  },
+  1: { // 第二个题库
+    "lastIndex": 0, // 上次做在第1题
+    data: {
+      0: {
+        "userSelect": "对" // 上次用户选择的答案是"错"
+        "fraction": 1 // 得分
+      },
+      99: {
+        "userSelect": "A" // 上次用户选择的答案是"A"
+        "fraction": 1 // 得分
+      },
+      146: {
+        "userSelect": ["A", "B"] // 上次用户选择的答案是"A、B"
+        "fraction": 0.45 // 得分
+      }
+    }
+  }
+}
+*/
