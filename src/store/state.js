@@ -1,7 +1,8 @@
 export default {
   TestData: [],
   UserNote: {},
-  UserData: {}
+  UserData: {},
+  showDeleteBtn: false
 }
 /*
 UserNote结构：

@@ -48,4 +48,12 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="stylus" scoped>
+  @media (min-width: 700px)
+    #app
+      max-width: 700px
+      min-height: 100vh
+      margin: 0 auto
+      background-color: #fff
+      overflow-x: hidden
+</style>

@@ -13,6 +13,15 @@ export default {
 
     // =====将本地数据与线上数据进行对比并更新
     upData(state, TestData)
-    // =====读取本地题库数据===============
+  },
+  changeShowDeleteBtn (state, value) {
+    state.showDeleteBtn = value
+  },
+  deleteTestData (state, id) {
+    state.TestData.splice(id, 1)
+  },
+  importTestData (state, value) {
+    state.TestData.push(value)
+    console.log('新增了一条数据')
   }
 }

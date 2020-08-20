@@ -3,11 +3,15 @@
     <div class="header-left" @click="handleFeedBackClick">反馈</div>
     <div class="header-title">理论题库</div>
     <div
-      class="header-right iconfont"
+      class="header-right"
       @click="handleMoreShow"
       v-clickoutside="handleMoreOutClick"
     >
-      &#xe623;
+      <span
+        class="iconfont"
+        v-html="moreBtnContent"
+        :style="moreBtnContentStyle"
+      >{{moreBtnContent}}</span>
       <transition
         name="more-list"
         enter-active-class="animate__animated animate__zoomIn"
@@ -19,7 +23,7 @@
           @click.stop
         >
           <ul>
-            <li>{{editBtnContent}}</li>
+            <li @click="editTestData">编辑</li>
             <li title="仅支持json格式文件">导入题库
               <input
                 class="importFileBtn"
@@ -39,26 +43,72 @@
 
 <script>
 import clickoutside from '@functions/clickoutside'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'HomeHeader',
   data () {
     return {
       moreListShow: false,
-      editBtnContent: '编辑'
+      moreBtnContentStyle: {
+        fontSize: '.45rem'
+      }
+    }
+  },
+  computed: {
+    ...mapState(['showDeleteBtn']),
+    moreBtnContent () {
+      if (this.showDeleteBtn) {
+        return '完成'
+      } else {
+        return '&#xe623;'
+      }
     }
   },
   methods: {
-    handleFeedBackClick: function () {
+    ...mapMutations(['changeShowDeleteBtn', 'importTestData']),
+    handleFeedBackClick () {
       alert('发现问题了？\n快来告诉我吧！')
     },
-    importFileAddressChange: function (e) {
-      console.log(e.target.files)
+    importFileAddressChange (e) {
+      var _this = this
+      var files = e.target.files
+      for (var i = 0; i < files.length; i++) {
+        var thisFile = files[i]
+        if (thisFile.name.split('.').slice(-1)[0] === 'json') {
+          let reader = new FileReader()
+          reader.readAsText(thisFile)
+          reader.onload = function () {
+            var thisData = null
+            try {
+              thisData = JSON.parse(this.result)
+            } catch (e) {}
+            if (thisData && thisData['title'] && thisData['class'] && thisData['data'] && thisData['data'][0]['id'] === 0) {
+              // 数据合格
+              _this.importTestData(thisData)
+            } else {
+              console.log('\'' + thisFile.name + '\' 的数据结构不是预期的')
+            }
+          }
+        } else {
+          alert('\'' + thisFile.name + '\' 不是json格式的文件')
+        }
+      }
     },
-    handleMoreShow: function () {
-      this.moreListShow = !this.moreListShow
+    handleMoreShow () {
+      if (!this.showDeleteBtn) {
+        this.moreListShow = !this.moreListShow
+      } else {
+        this.moreBtnContentStyle.fontSize = '.45rem'
+        this.changeShowDeleteBtn(false)
+      }
     },
-    handleMoreOutClick: function () {
+    handleMoreOutClick () {
       this.moreListShow = false
+    },
+    editTestData () {
+      this.moreBtnContentStyle.fontSize = '.34rem'
+      this.moreListShow = false
+      this.changeShowDeleteBtn(true)
     }
   },
   directives: {
@@ -73,6 +123,7 @@ export default {
   @import '~@styles/moreList.styl'
   .header
     position: relative
+    z-index: 1
     height: .95rem
     font-size: 0
     text-align: center
@@ -100,7 +151,6 @@ export default {
     .header-left
       left: .15rem
     .header-right
-      font-size: .45rem
       right: 0
       padding: .3rem
       .header-more-list
