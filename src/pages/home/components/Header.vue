@@ -146,14 +146,13 @@ export default {
     .header-title
       position: relative
       color: #333
-      font-size: .4rem
+      font-size: .38rem
       font-weight: 900
       cursor: auto
     .header-left
       left: .15rem
     .header-right
-      right: 0
-      padding: .3rem
+      right: .15rem
       .header-more-list
         moreList()
         ul
@@ -164,5 +163,4 @@ export default {
               position: absolute
               top: 0
               right: 0
-
 </style>

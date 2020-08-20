@@ -28,6 +28,12 @@
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'HomeList',
+  data () {
+    return {
+      isHomeLeave: false,
+      isHomeEnter: false
+    }
+  },
   computed: {
     // 将this.$store.state.TestData映射成this.TestData
     ...mapState(['TestData', 'UserNote', 'showDeleteBtn'])
@@ -87,6 +93,7 @@ export default {
   .home-list
     padding: .5rem 0
     background-color: #fff
+    transition: .5s
     user-select: none
     .home-list-TestInfo
       position: relative
@@ -95,7 +102,7 @@ export default {
       width: 80%
       height: 1rem
       border: #eee 1px solid
-      background-color: #fff
+      background-color: #FFFFFF
       box-shadow: #eee 2px 2px 5px
       transition: 1s
       cursor: pointer
@@ -105,12 +112,13 @@ export default {
         top: 60%
         left: .4rem
         transform: translateY(-50%)
-        max-width: 80%;
+        max-width: 80%
+        padding: .05rem 0
         font-size: .36rem
         font-weight: 700
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        white-space: nowrap
+        text-overflow: ellipsis
+        overflow: hidden
       .isDefault,
       .TestLength
         position: relative

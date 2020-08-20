@@ -218,3 +218,11 @@ a {
     color: #4ea1db;
     text-decoration: none;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+::selection {
+    background: #D7F1FD;
+}
