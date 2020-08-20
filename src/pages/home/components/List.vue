@@ -1,21 +1,26 @@
 <template>
   <div class="home-list">
-    <div
-      v-for="(item, index) of TestData"
-      :key="index"
-      class="home-list-TestInfo"
-      @click="doTheTest(index)"
-    >
-      <span class="TestInfo-title">{{item.title}}</span>
-      <span class="isDefault" v-if="'defaultData' in item" >默认题库</span>
-      <transition name="deleteBtn">
-        <span
-          class="iconfont deleteBtn"
-          v-show="showDeleteBtn"
-          @click="deleteBtnClick(index)"
-        >&#xe600;</span>
-      </transition>
-    </div>
+    <transition-group name="TestInfo" appear>
+      <div
+        v-for="(item, index) of TestData"
+        :key="item.title"
+        class="home-list-TestInfo"
+        :style="TestInfoStyle(index)"
+        @click="doTheTest(index)"
+      >
+        <span class="TestInfo-title">{{item.title}}</span>
+        <span class="isDefault" v-if="'defaultData' in item" >默认题库</span>
+        <span class="TestLength">{{TestLength(index)}}</span>
+        <transition name="deleteBtn">
+          <span
+            class="iconfont deleteBtn"
+            v-show="showDeleteBtn"
+            :style="deleteBtnStyle(index)"
+            @click="deleteBtnClick(index)"
+          >&#xe600;</span>
+        </transition>
+      </div>
+    </transition-group>
   </div>
 </template>
 
@@ -29,6 +34,17 @@ export default {
   },
   methods: {
     ...mapMutations(['changeShowDeleteBtn', 'deleteTestData']),
+    TestInfoStyle (index) {
+      return 'transition-delay: ' + 0.1 * index + 's;'
+    },
+    deleteBtnStyle (index) {
+      return 'transition-delay: ' + 0.07 * index + 's;'
+    },
+    TestLength (index) {
+      var TestLength = this.TestData[index].data.length
+      TestLength = TestLength > 0 ? TestLength + '题' : ''
+      return TestLength
+    },
     deleteBtnClick (id) {
       if (event) event.stopPropagation()
       if (confirm('删除非默认题库后无法恢复，\n是否继续？')) {
@@ -46,7 +62,7 @@ export default {
       }
     },
     doTheTest (id) {
-      console.log('1234')
+      this.$router.push('exercise/' + id)
     }
   }
 }
@@ -59,6 +75,14 @@ export default {
   .deleteBtn-enter-to,
   .deleteBtn-leave
     transform: translateX(0)
+  .TestInfo-enter,
+  .TestInfo-leave-to
+    transform: translateX(-120%)
+    opcity: 0
+  .TestInfo-enter-to,
+  .TestInfo-leave
+    transform: translateX(0)
+    opcity: 1
 
   .home-list
     padding: .5rem 0
@@ -73,22 +97,27 @@ export default {
       border: #eee 1px solid
       background-color: #fff
       box-shadow: #eee 2px 2px 5px
-      transition: .2s
-      transform-origin: right
+      transition: 1s
       cursor: pointer
       overflow: hidden
       .TestInfo-title
         position: absolute
-        top: 50%
-        left: .5rem
+        top: 60%
+        left: .4rem
         transform: translateY(-50%)
-        font-size: .35rem
-      .isDefault
-        position: absolute
-        top: .2rem
-        left: .2rem
-        color: #666
-        font-size: .15rem
+        max-width: 80%;
+        font-size: .36rem
+        font-weight: 700
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      .isDefault,
+      .TestLength
+        position: relative
+        margin-top: .2rem
+        margin-left: .2rem
+        color: #999
+        font-size: .2rem
         font-style: italic
       .deleteBtn
         position: absolute
@@ -102,6 +131,4 @@ export default {
         color: #fff
         background-color: #F7603E
         transition: .5s
-    // .home-list-TestInfo:hover
-    //   transform: scale(1.05)
 </style>

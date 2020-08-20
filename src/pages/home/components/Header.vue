@@ -93,6 +93,7 @@ export default {
           alert('\'' + thisFile.name + '\' 不是json格式的文件')
         }
       }
+      this.moreListShow = false
     },
     handleMoreShow () {
       if (!this.showDeleteBtn) {

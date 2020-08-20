@@ -22,6 +22,5 @@ export default {
   },
   importTestData (state, value) {
     state.TestData.push(value)
-    console.log('新增了一条数据')
   }
 }
