@@ -8,7 +8,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import store from './store'
 import 'babel-polyfill'
 import 'animate.css'
-import 'swiper/dist/css/swiper.css'
+import 'swiper/swiper-bundle.css'
 import '@styles/reset.css'
 import '@styles/border.css'
 import '@styles/iconfont.css'
@@ -16,10 +16,6 @@ import '@styles/iconfont.css'
 Vue.config.productionTip = false
 fastClick.attach(document.body)
 Vue.use(VueAwesomeSwiper)
-
-// document.body.addEventListener('touchmove', (e) => {
-//   e.preventDefault()
-// }, { passive: false })
 
 /* eslint-disable no-new */
 new Vue({

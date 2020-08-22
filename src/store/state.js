@@ -1,7 +1,16 @@
+let TestData = []
+let UserData = {}
+let UserNote = {}
+try {
+  TestData = typeof JSON.parse(localStorage.TestData) === 'object' ? JSON.parse(localStorage.TestData) : {}
+  UserData = typeof JSON.parse(localStorage.UserData) === 'object' ? JSON.parse(localStorage.UserData) : {}
+  UserNote = typeof JSON.parse(localStorage.UserNote) === 'object' ? JSON.parse(localStorage.UserNote) : {}
+} catch (e) {}
+
 export default {
-  TestData: [],
-  UserNote: {},
-  UserData: {},
+  TestData,
+  UserNote,
+  UserData,
   showDeleteBtn: false
 }
 /*

@@ -8,7 +8,7 @@
 
 <script>
 import axios from 'axios'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { localStorageSetItem } from './store/TestDataInit/localStorageSetItem'
 export default {
   name: 'App',
@@ -17,17 +17,20 @@ export default {
   },
   watch: {
     TestData () {
+      console.log('监听到TestData发生变化，将要存储')
       localStorageSetItem('TestData', this.TestData)
     },
     UserNote () {
+      console.log('监听到UserNote发生变化，将要存储')
       localStorageSetItem('UserNote', this.UserNote)
     },
     UserData () {
+      console.log('监听到UserData发生变化，将要存储')
       localStorageSetItem('UserData', this.UserData)
     }
   },
   methods: {
-    ...mapActions(['TestDataOnload']), // 将this.$store.dispatch()映射成this.TestDataOnload(),同理还有 ...mapMutations
+    ...mapMutations(['TestDataOnload']), // 将this.$store.dispatch()映射成this.TestDataOnload(),同理还有 ...mapMutations
     getTestData () {
       axios.get('/api/TestData.json')
         .then(this.getTestDataSuccess)
@@ -49,10 +52,12 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  #app
+    min-height: 100vh
+    background-color: #fff
   @media (min-width: 700px)
     #app
       max-width: 700px
-      min-height: 100vh
       margin: 0 auto
       background-color: #fff
       overflow-x: hidden

@@ -1,13 +1,9 @@
 <template>
-  <div>
+  <div class="body">
     <swiper ref="mySwiper" :options="swiperOptions">
-      <swiper-slide>Slide 1</swiper-slide>
-      <swiper-slide>Slide 2</swiper-slide>
-      <swiper-slide>Slide 3</swiper-slide>
-      <swiper-slide>Slide 4</swiper-slide>
-      <swiper-slide>Slide 5</swiper-slide>
-      <div class="swiper-pagination" slot="pagination"></div>
+      <swiper-slide>214534</swiper-slide>
     </swiper>
+    <div>测试数据：{{test}}</div>
   </div>
 </template>
 
@@ -26,9 +22,6 @@ export default {
   data () {
     return {
       swiperOptions: {
-        pagination: {
-          el: '.swiper-pagination'
-        }
       }
     }
   },
@@ -36,13 +29,26 @@ export default {
     ...mapState(['TestData', 'UserData', 'UserNote']),
     swiper () {
       return this.$refs.mySwiper.$swiper
+    },
+    test () {
+      return this.UserData['1'].lastIndex
     }
   },
   methods: {
     ...mapMutations([])
+  },
+  beforeUpdate () {
+  },
+  mounted () {
+    // swiper on方法中this作用域发生变化，故拷贝一份过去
+    this.swiper._this = this
   }
 }
 </script>
 
 <style lang="stylus" scpoed>
+  .body
+    background-color: #fff
+    *
+      height: 4rem
 </style>

@@ -4,7 +4,7 @@
       tag="div"
       to="/"
       class="header-back iconfont"
-    >&#xe685;</router-link>
+    >&#xe602;</router-link>
     <div class="header-title" v-html="title">{{title}}</div>
     <div
       class="header-more"
@@ -79,8 +79,10 @@ export default {
   @import '~@styles/varibles.styl'
   @import '~@styles/moreList.styl'
   .header
-    position: relative
-    z-index: 1
+    position: fixed
+    z-index: 2
+    top: 0
+    width: inherit
     height: .95rem
     font-size: 0
     text-align: center

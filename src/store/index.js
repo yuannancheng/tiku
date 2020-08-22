@@ -7,6 +7,7 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  strict: false, // 严格模式
   state,
   actions,
   mutations

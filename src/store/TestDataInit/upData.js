@@ -1,13 +1,13 @@
 export function upData (state, TestData) {
-  var localTestData = []
+  var localTestData = state.TestData
   // 读取本地数据
-  try {
-    localTestData = typeof JSON.parse(localStorage.TestData) === 'object' ? JSON.parse(localStorage.TestData) : []
-  } catch (e) {
-    console.groupCollapsed('%ctry失败：本地数据无法正确读取！', 'color: red;')
-    console.error(e)
-    console.groupEnd()
-  }
+  // try {
+  //   localTestData = typeof JSON.parse(localStorage.TestData) === 'object' ? JSON.parse(localStorage.TestData) : []
+  // } catch (e) {
+  //   console.groupCollapsed('%ctry失败：本地数据无法正确读取！', 'color: red;')
+  //   console.error(e)
+  //   console.groupEnd()
+  // }
 
   // 得到默认数据列表，用于稍后和本地数据做对比
   var TestDataList = []
@@ -70,7 +70,9 @@ export function upData (state, TestData) {
   })
 
   // 检查更新完毕，存储到store中，App.vue会监听到改变并自动存储到本地
-  state.TestData = localTestData
+  if (state.TestData !== localTestData) {
+    state.TestData = localTestData
+  }
 
   // 提醒用户哪些题目更新了，并且清除更新题号的用户做题数据
   var UserData = state.UserData
