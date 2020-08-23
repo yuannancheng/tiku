@@ -10,8 +10,7 @@ try {
 export default {
   TestData,
   UserNote,
-  UserData,
-  showDeleteBtn: false
+  UserData
 }
 /*
 UserNote结构：

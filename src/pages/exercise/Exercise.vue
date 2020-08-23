@@ -2,10 +2,12 @@
   <div class="Exercise">
     <exercise-header :TestDataIndex="TestDataIndex"></exercise-header>
     <exercise-body
-      :TestDataIndex="TestDataIndex"
+      :DistributeData="[TestDataIndex, lastIndex, maxIndex]"
+      ref="ExerciseBody"
     ></exercise-body>
     <exercise-under
-      :TestDataIndex="TestDataIndex"
+      :lastIndex="lastIndex + 1"
+      :maxIndex="maxIndex + 1"
       @prev="prev"
       @next="next"
     ></exercise-under>
@@ -47,62 +49,30 @@ export default {
       if (this.UserData && this.TestDataIndex in this.UserData) {
         return this.UserData[this.TestDataIndex].lastIndex
       } else {
-        // console.log('初始化数据', this.TestDataIndex)
+        // 第一次做题库
         this.initUserData(this.TestDataIndex)
-        // console.log(this.UserData)
         return 0
       }
     },
     maxIndex () {
-      return this.TestData[this.TestDataIndex].data.length
+      return this.TestData[this.TestDataIndex].data.length - 1
     }
   },
   watch: {
     TestDataIndex () {
+      // 路由发生变化，保存路由携带参数
       this.lastRouteId = this.TestDataIndex
-      // console.log('路由发生变化')
-    },
-    lastIndex () {
-      console.log('发生了变化', this.lastIndex, this.TestDataIndex)
-    }//,
-    // showIndexList () {
-    //   console.log('发生了变化')
-    // }
+    }
   },
   methods: {
-    ...mapMutations(['initUserData', 'changeTest']),
+    ...mapMutations(['initUserData']),
     prev () {
-      console.log('即将更新', this.UserData['1'].lastIndex)
-      // this.$set(this.UserData['1'], 'lastIndex', 8)
-      this.changeTest([1, 9])
-      console.log('更新完毕', this.UserData['1'].lastIndex)
-      console.log('为啥vux更新了，没把数据推送到App.vue的监听里，但是推送到了咱这页面上呢？')
-      // this.showIndexList(this.lastIndex - 1)
+      // 调用this.$refs.ExerciseBody 里的方法
+      this.$refs.ExerciseBody.swiper.slidePrev()
     },
     next () {
-      // this.showIndexList(this.lastIndex + 1)
-    }//,
-    // showIndexList (id) {
-    //   var showIndexList = {avtiveId: 1, list: []}
-    //   if (id < 1) {
-    //     showIndexList.avtiveId = 0
-    //     showIndexList.list[0] = 0
-    //     showIndexList.list[1] = 1
-    //     return showIndexList
-    //   } else if (id > this.maxIndex) {
-    //     showIndexList.list[0] = this.maxIndex - 1
-    //     showIndexList.list[1] = this.maxIndex
-    //     return showIndexList
-    //   } else {
-    //     showIndexList.list[0] = id - 1
-    //     showIndexList.list[1] = id
-    //     showIndexList.list[2] = id + 1
-    //     return showIndexList
-    //   }
-    // }
-  },
-  mounted () {
-    console.log('mounted', this.lastIndex, this.TestDataIndex)
+      this.$refs.ExerciseBody.swiper.slideNext()
+    }
   }
 }
 </script>
@@ -110,7 +80,9 @@ export default {
 <style lang="stylus" scoped>
   .Exercise
     width: 100%
+    min-height: 100vh
     padding: .95rem 0
+    box-sizing: border-box
   @media (min-width: 700px)
     .Exercise
       width: 700px

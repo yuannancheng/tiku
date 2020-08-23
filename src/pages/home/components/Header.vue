@@ -43,9 +43,12 @@
 
 <script>
 import clickoutside from '@functions/clickoutside'
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
   name: 'HomeHeader',
+  props: {
+    showDeleteBtn: Boolean
+  },
   data () {
     return {
       moreListShow: false,
@@ -55,7 +58,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['showDeleteBtn']),
     moreBtnContent () {
       if (this.showDeleteBtn) {
         return '完成'
@@ -65,7 +67,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['changeShowDeleteBtn', 'importTestData']),
+    ...mapMutations(['importTestData']),
     handleFeedBackClick () {
       alert('发现问题了？\n快来告诉我吧！')
     },
@@ -110,6 +112,9 @@ export default {
       this.moreBtnContentStyle.fontSize = '.34rem'
       this.moreListShow = false
       this.changeShowDeleteBtn(true)
+    },
+    changeShowDeleteBtn (value) {
+      this.$emit('changeShowDeleteBtn', value)
     }
   },
   directives: {

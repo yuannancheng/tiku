@@ -1,7 +1,7 @@
 <template>
   <div class="Home">
-    <home-header></home-header>
-    <home-list></home-list>
+    <home-header :showDeleteBtn="showDeleteBtn" @changeShowDeleteBtn="changeShowDeleteBtn"></home-header>
+    <home-list :showDeleteBtn="showDeleteBtn"></home-list>
   </div>
 </template>
 
@@ -13,6 +13,16 @@ export default {
   components: {
     HomeHeader,
     HomeList
+  },
+  data () {
+    return {
+      showDeleteBtn: false
+    }
+  },
+  methods: {
+    changeShowDeleteBtn (value) {
+      this.showDeleteBtn = value
+    }
   }
 }
 </script>

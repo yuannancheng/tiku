@@ -28,6 +28,9 @@
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'HomeList',
+  props: {
+    showDeleteBtn: Boolean
+  },
   data () {
     return {
       isHomeLeave: false,
@@ -36,7 +39,7 @@ export default {
   },
   computed: {
     // 将this.$store.state.TestData映射成this.TestData
-    ...mapState(['TestData', 'UserNote', 'showDeleteBtn'])
+    ...mapState(['TestData', 'UserNote'])
   },
   methods: {
     ...mapMutations(['changeShowDeleteBtn', 'deleteTestData']),
@@ -101,9 +104,9 @@ export default {
       padding: .2rem
       width: 80%
       height: 1rem
-      border: #eee 1px solid
+      // border: #eee 1px solid
       background-color: #FFFFFF
-      box-shadow: #eee 2px 2px 5px
+      box-shadow: #e1e1e1 0 0 10px
       transition: 1s
       cursor: pointer
       overflow: hidden

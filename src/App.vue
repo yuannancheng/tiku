@@ -17,15 +17,12 @@ export default {
   },
   watch: {
     TestData () {
-      console.log('监听到TestData发生变化，将要存储')
       localStorageSetItem('TestData', this.TestData)
     },
     UserNote () {
-      console.log('监听到UserNote发生变化，将要存储')
       localStorageSetItem('UserNote', this.UserNote)
     },
     UserData () {
-      console.log('监听到UserData发生变化，将要存储')
       localStorageSetItem('UserData', this.UserData)
     }
   },
@@ -45,9 +42,11 @@ export default {
   },
   mounted () {
     this.getTestData()
+  },
+  upDated (n, o) {
+    console.log('upDataed', n)
+    console.log('upDataed', o)
   }
-  // 当使用了<keep-alive>时，第二次渲染组件会直接从内存中取得数据，
-  // 如果某些数据需要刷新的话可以在activated这个生命周期钩子中执行
 }
 </script>
 

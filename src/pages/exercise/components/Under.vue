@@ -1,7 +1,7 @@
 <template>
   <div class="under">
     <div class="under-prev iconfont" @click="prev">&#xe685;上一题</div>
-    <div class="under-number">-/-</div>
+    <div class="under-number">{{lastIndex}}/{{maxIndex}}</div>
     <div class="under-next iconfont"  @click="next">下一题&#xe6eb;</div>
   </div>
 </template>
@@ -9,6 +9,20 @@
 <script>
 export default {
   name: 'ExerciseUnder',
+  props: {
+    lastIndex: {
+      default: '-',
+      validator (e) {
+        return typeof (e * 1) === 'number'
+      }
+    },
+    maxIndex: {
+      default: '-',
+      validator (e) {
+        return typeof (e * 1) === 'number'
+      }
+    }
+  },
   methods: {
     prev () {
       this.$emit('prev')
@@ -36,8 +50,7 @@ export default {
     user-select: none
     *
       display: inline-block
-      padding: .1rem
-      font-size: .34rem
+      padding: .17rem .1rem
       cursor: pointer
     .under-prev,
     .under-number,
@@ -45,12 +58,11 @@ export default {
       position: absolute
       top: 50%
       transform: translateY(-50%)
+      font-size: .38rem
     .under-number
       position: relative
     .under-prev
       left: .1rem
-      font-size: .36rem
     .under-next
       right: .1rem
-      font-size: .36rem
 </style>

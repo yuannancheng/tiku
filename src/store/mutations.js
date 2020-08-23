@@ -31,17 +31,24 @@ export default {
       'lastIndex': 0,
       'data': {}
     }
-    // state.UserData = {
-    //   ...state.UserData,
-    //   [id]: {
-    //     'lastIndex': 0,
-    //     'data': {}
-    //   }
-    // }
+    // 触发更新
+    state.UserData = Object.assign({}, state.UserData)
   },
-  changeTest (state, kv) {
-    console.log('开始更新')
-    // if (kv[0] in )
+  setTestLastIndex (state, kv) {
     state.UserData[kv[0]].lastIndex = kv[1]
+    state.UserData = Object.assign({}, state.UserData)
+
+    /* 因无法监视对象部分值的修改，使用以下方法来触发
+     * 1、使用新的引用替换原引用
+     *  state.UserData.key.changekey = changeValue
+     *  state.UserData = Object.assign({}, state.UserData)
+     * 2、往对象中新增子属性来触发
+     *  state.UserData.key.changekey = changeValue
+     *  state.UserData = {
+     *    ...state.UserData,
+     *    __TriggerWatch__: 0
+     *  }
+     *  delete state.UserData.__TriggerWatch__
+    */
   }
 }

@@ -13,7 +13,15 @@ export function toNewVersion (state) {
     var oldNote = []
     oldVersionProgramData.forEach((el, id) => {
       el.data.forEach((el1, id1) => {
-        if ('user-select' in el1 && !('user-select' in state.UserData[id].data[id1])) {
+        if (
+          'user-select' in el1 &&
+          (
+            !(id in state.UserData) ||
+            !('data' in state.UserData[id]) ||
+            !(id1 in state.UserData[id].data) ||
+            !('user-select' in state.UserData[id].data[id1])
+          )
+        ) {
           oldData.push({})
           if (!('key' in oldData[id])) {
             oldData[id].key = id
@@ -26,7 +34,15 @@ export function toNewVersion (state) {
             'fraction': el1['fraction']
           }
         }
-        if ('user-note' in el1 && !('user-note' in state.UserData[id].data[id1])) {
+        if (
+          'user-note' in el1 &&
+          (
+            !(id in state.UserData) ||
+            !('data' in state.UserData[id]) ||
+            !(id1 in state.UserData[id].data) ||
+            !('user-note' in state.UserData[id].data[id1])
+          )
+        ) {
           oldNote.push({})
           if (!('key' in oldNote[id])) {
             oldNote[id].key = id
@@ -46,7 +62,6 @@ export function toNewVersion (state) {
 
     oldData.forEach((e) => {
       if (JSON.stringify(e) !== '{}' && !([e.key] in oldUserData)) {
-        console.log(e, '不在oldUserData中')
         oldUserData[e.key] = e.data
       }
     })

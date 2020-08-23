@@ -1,13 +1,5 @@
 export function upData (state, TestData) {
   var localTestData = state.TestData
-  // 读取本地数据
-  // try {
-  //   localTestData = typeof JSON.parse(localStorage.TestData) === 'object' ? JSON.parse(localStorage.TestData) : []
-  // } catch (e) {
-  //   console.groupCollapsed('%ctry失败：本地数据无法正确读取！', 'color: red;')
-  //   console.error(e)
-  //   console.groupEnd()
-  // }
 
   // 得到默认数据列表，用于稍后和本地数据做对比
   var TestDataList = []
