@@ -65,10 +65,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['initUserData']),
+    ...mapMutations(['initUserData', 'setTestLastIndex']),
     prev () {
       // 调用this.$refs.ExerciseBody 里的方法
       this.$refs.ExerciseBody.swiper.slidePrev()
+      // this.setTestLastIndex([0, 148])
     },
     next () {
       this.$refs.ExerciseBody.swiper.slideNext()

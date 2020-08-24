@@ -50,5 +50,20 @@ export default {
      *  }
      *  delete state.UserData.__TriggerWatch__
     */
+  },
+  setOptionSelect (state, data) {
+    var tid = data[0] // 题库id
+    var lid = data[1] // 题号
+    var opt = data[2] // 选项
+    var fra = data[3] // 分数
+    if (!(lid in state.UserData[tid].data)) {
+      state.UserData[tid].data[lid] = {
+        'userSelect': [],
+        'fraction': 0
+      }
+    }
+    state.UserData[tid].data[lid].userSelect = opt
+    state.UserData[tid].data[lid].fraction = fra
+    state.UserData = Object.assign({}, state.UserData)
   }
 }
