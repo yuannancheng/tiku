@@ -2,7 +2,8 @@
 html {
     background-color: #fff;
     color: #000;
-    font-size: 12px
+    font-size: 12px;
+    touch-action: manipulation;
 }
  
 body,
@@ -225,4 +226,12 @@ a {
 
 ::selection {
     background: #D7F1FD;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
 }

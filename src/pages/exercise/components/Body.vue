@@ -48,8 +48,8 @@
             v-if="showAnswer(TestId)"
             class="answerAndFraction"
           >
-            正确答案：{{getAnswerAndFraction(TestId)[0].join('、')}}　
-            得分：{{getAnswerAndFraction(TestId)[1]}}
+            <span class="answer">正确答案：{{getAnswerAndFraction(TestId)[0].join('、')}}</span>
+            <span class="fraction">得分：{{getAnswerAndFraction(TestId)[1]}}</span>
           </div>
         </template>
       </swiper-slide>
@@ -67,7 +67,8 @@ export default {
       validator (e) {
         return typeof (e[0] * 1) === 'number' && typeof (e[1] * 1) === 'number' && typeof (e[2] * 1) === 'number'
       }
-    }
+    },
+    listenKeydown: Boolean
   },
   data () {
     return {
@@ -85,7 +86,8 @@ export default {
       showTestList: [], // 当前动态加载的题目
       activeId: 0, // 展示给用户的题目在showTestList中的下标
       userSelect: {}, // 用户预选的选项，在用户点击确定按钮后清除当前题目的预选
-      shakeOptions: {} // 需要警告的选项，用户选错/应选却没选的
+      shakeOptions: {}, // 需要警告的选项，用户选错/应选却没选的
+      Timer: null // 键盘事件函数节流
     }
   },
   computed: {
@@ -301,17 +303,52 @@ export default {
       if (this.showAnswer(id)) {
         return [this.thisTestData[id].正确答案, this.UserData[this.TestDataIndex].data[id].fraction]
       }
+    },
+    handelKeydown (e) {
+      var keyCode = e.keyCode
+      switch (keyCode) {
+        case 32:
+          this.$emit('changeShowPanel', true)
+          break
+        case 37:
+          if (!this.Timer) {
+            this.Timer = setTimeout(() => {
+              this.$emit('prev')
+              this.Timer = null
+            }, 10)
+          }
+          break
+        case 39:
+          if (!this.Timer) {
+            this.Timer = setTimeout(() => {
+              this.$emit('next')
+              this.Timer = null
+            }, 10)
+          }
+          break
+      }
     }
   },
   watch: {
     lastIndex () {
       this.computeShowList()
+    },
+    listenKeydown () {
+      switch (this.listenKeydown) {
+        case true:
+          window.addEventListener('keydown', this.handelKeydown)
+          break
+        case false:
+          window.removeEventListener('keydown', this.handelKeydown)
+          break
+      }
     }
   },
   mounted () {
     // swiper on方法中this作用域发生变化，故拷贝一份过去
     this.swiper._this = this
     this.computeShowList()
+    window.addEventListener('keydown', this.handelKeydown)
   },
   activated () {
     // 当重新选择题库回到页面时，重新渲染，把多选题预选清空
@@ -330,7 +367,7 @@ export default {
       min-height: 87vh
       padding: .3rem
       box-sizing: border-box
-      > *
+      *
         position: relative
         font-size: .36rem
       .type
@@ -405,4 +442,8 @@ export default {
         background-color: #f6f6f6
         text-indent: .2rem
         cursor: default
+        .answer
+          margin-right: .2rem
+        .fraction
+          margin-left: .2rem
 </style>

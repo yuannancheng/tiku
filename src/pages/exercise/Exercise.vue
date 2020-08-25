@@ -3,14 +3,28 @@
     <exercise-header :TestDataIndex="TestDataIndex"></exercise-header>
     <exercise-body
       :DistributeData="[TestDataIndex, lastIndex, maxIndex]"
+      :listenKeydown="BodyListenKeydown"
       ref="ExerciseBody"
+      @prev="prev"
+      @next="next"
+      @changeShowPanel="changeShowPanel"
     ></exercise-body>
     <exercise-under
       :lastIndex="lastIndex + 1"
       :maxIndex="maxIndex + 1"
       @prev="prev"
       @next="next"
+      @changeShowPanel="changeShowPanel"
     ></exercise-under>
+    <transition name="showPanel">
+      <exercise-panel
+        v-show="showPanel"
+        ref="ExercisePanel"
+        :DistributeData="[TestDataIndex, lastIndex, maxIndex]"
+        @changeShowPanel="changeShowPanel"
+        @jumpTest="jumpTest"
+      ></exercise-panel>
+    </transition>
   </div>
 </template>
 
@@ -18,18 +32,23 @@
 import ExerciseHeader from './components/Header'
 import ExerciseBody from './components/Body'
 import ExerciseUnder from './components/Under'
+import ExercisePanel from './components/Panel'
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Exercise',
   components: {
     ExerciseHeader,
     ExerciseBody,
-    ExerciseUnder
+    ExerciseUnder,
+    ExercisePanel
   },
   data () {
     return {
       lastRouteId: 0,
-      propsShowIndexList: {}
+      propsShowIndexList: {},
+      showPanel: false,
+      lastShowPanel: null,
+      BodyListenKeydown: true
     }
   },
   computed: {
@@ -67,19 +86,68 @@ export default {
   methods: {
     ...mapMutations(['initUserData', 'setTestLastIndex']),
     prev () {
-      // 调用this.$refs.ExerciseBody 里的方法
       this.$refs.ExerciseBody.swiper.slidePrev()
-      // this.setTestLastIndex([0, 148])
     },
     next () {
       this.$refs.ExerciseBody.swiper.slideNext()
+    },
+    changeShowPanel (value) {
+      this.showPanel = value
+      if (value === true) {
+        this.BodyListenKeydown = false
+        this.$nextTick(() => {
+          this.$refs.ExercisePanel._activated()
+        })
+      } else {
+        this.BodyListenKeydown = true
+        this.$nextTick(() => {
+          this.$refs.ExercisePanel._deactivated()
+        })
+      }
+    },
+    jumpTest (id) {
+      id = id - 1
+      this.setTestLastIndex([this.TestDataIndex, id])
+      this.showPanel = false
+      this.BodyListenKeydown = true
+      this.$nextTick(() => {
+        this.$refs.ExercisePanel._deactivated()
+      })
+    }
+  },
+  activated () {
+    if (this.lastShowPanel === true) {
+      this.$refs.ExercisePanel._activated()
+    } else {
+      this.BodyListenKeydown = true
+    }
+  },
+  deactivated () {
+    if (this.showPanel === true) {
+      this.lastShowPanel = true
+      this.$refs.ExercisePanel._deactivated()
+    } else {
+      this.lastShowPanel = null
+      this.BodyListenKeydown = false
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+  .showPanel-enter,
+  .showPanel-leave-to
+    transform: translateY(100%)
+    opacity: 0
+  .showPanel-enter-to,
+  .showPanel-leave
+    transform: translateY(0)
+    opacity: 1
+  .showPanel-enter-active,
+  .showPanel-leave-active
+    transition: .3s
   .Exercise
+    position: relative
     width: 100%
     min-height: 100vh
     padding: .95rem 0

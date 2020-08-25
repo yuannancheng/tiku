@@ -4,7 +4,7 @@ export function toNewVersion (state) {
   try {
     oldVersionProgramData = typeof JSON.parse(localStorage.题库) === 'object' ? JSON.parse(localStorage.题库) : null
   } catch (e) {
-    console.groupCollapsed('%ctry失败：数据类型不合法！', 'color: red;')
+    console.groupCollapsed('%ctry失败：无旧版本数据或数据类型不合法！', 'color: red;')
     console.error(e)
     console.groupEnd()
   }

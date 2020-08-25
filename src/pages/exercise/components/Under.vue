@@ -1,7 +1,7 @@
 <template>
   <div class="under">
     <div class="under-prev iconfont" @click="prev">&#xe685;上一题</div>
-    <div class="under-number">{{lastIndex}}/{{maxIndex}}</div>
+    <div class="under-number" @click="showPanel">{{lastIndex}}/{{maxIndex}}</div>
     <div class="under-next iconfont"  @click="next">下一题&#xe6eb;</div>
   </div>
 </template>
@@ -29,6 +29,9 @@ export default {
     },
     next () {
       this.$emit('next')
+    },
+    showPanel () {
+      this.$emit('changeShowPanel', true)
     }
   }
 }
