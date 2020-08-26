@@ -7,12 +7,10 @@
         class="TestContent"
       >
         <template v-if="thisTestData[TestId]"><!-- 避免数据还没加载出来时报错 -->
-          <div class="type swiper-no-swiping">{{thisTestData[TestId].题型}}</div>
-          <div class="title swiper-no-swiping">
-            <div class="id">
-              {{TestId + 1}}.
-            </div>
-            {{thisTestData[TestId].title}}
+          <div class="type">{{thisTestData[TestId].题型}}</div>
+          <div class="testInfo">
+            <div class="id">{{TestId + 1}}.</div>
+            <div class="title swiper-no-swiping">{{thisTestData[TestId].title}}</div>
           </div>
           <template v-if="testType(TestId, '判断')">
             <div
@@ -68,7 +66,8 @@ export default {
         return typeof (e[0] * 1) === 'number' && typeof (e[1] * 1) === 'number' && typeof (e[2] * 1) === 'number'
       }
     },
-    listenKeydown: Boolean
+    listenKeydown: Boolean,
+    showWriteNoteBtn: Boolean
   },
   data () {
     return {
@@ -79,6 +78,10 @@ export default {
         on: {
           slideChangeTransitionEnd () {
             this._this.setTestLastIndex([this._this.TestDataIndex, this._this.showTestList[this.activeIndex]])
+            document.documentElement.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            })
           }
         }
       },
@@ -307,10 +310,10 @@ export default {
     handelKeydown (e) {
       var keyCode = e.keyCode
       switch (keyCode) {
-        case 32:
+        case 32: // 空格键
           this.$emit('changeShowPanel', true)
           break
-        case 37:
+        case 37: // 左键
           if (!this.Timer) {
             this.Timer = setTimeout(() => {
               this.$emit('prev')
@@ -318,12 +321,17 @@ export default {
             }, 10)
           }
           break
-        case 39:
+        case 39: // 右键
           if (!this.Timer) {
             this.Timer = setTimeout(() => {
               this.$emit('next')
               this.Timer = null
             }, 10)
+          }
+          break
+        case 87: // w键
+          if (this.showWriteNoteBtn) {
+            this.$emit('changeShowEdit', true)
           }
           break
       }
@@ -383,16 +391,19 @@ export default {
         box-sizing: border-box
         border-radius: 0 .23rem 0 .23rem
         user-select: none
-      .title
-        display: inline-block
-        margin-bottom: .3rem
-        line-height: .55rem
-        word-break: break-all
-        letter-spacing: .01rem
+      .testInfo
+        padding-bottom: .3rem
+        user-select: none
         .id
           display: inline
           margin-left: .9rem
-          user-select: none
+        .title
+          display: inline
+          margin-bottom: .3rem
+          line-height: .55rem
+          word-break: break-all
+          letter-spacing: .01rem
+          user-select: text
       .options
         margin: .5rem auto
         padding: .3rem .2rem .3rem .63rem

@@ -65,5 +65,14 @@ export default {
     state.UserData[tid].data[lid].userSelect = opt
     state.UserData[tid].data[lid].fraction = fra
     state.UserData = Object.assign({}, state.UserData)
+  },
+  setUserNote (state, data) {
+    var tid = data[0] // 题库id
+    var lid = data[1] // 题号
+    var val = data[2] // 笔记内容
+    if (!(tid in state.UserNote)) state.UserNote[tid] = {}
+    state.UserNote[tid][lid] = val
+    if (val === '') delete state.UserNote[tid][lid]
+    state.UserNote = Object.assign({}, state.UserNote)
   }
 }

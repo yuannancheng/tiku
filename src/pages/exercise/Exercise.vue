@@ -4,10 +4,12 @@
     <exercise-body
       :DistributeData="[TestDataIndex, lastIndex, maxIndex]"
       :listenKeydown="BodyListenKeydown"
+      :showWriteNoteBtn="showWriteNoteBtn"
       ref="ExerciseBody"
       @prev="prev"
       @next="next"
       @changeShowPanel="changeShowPanel"
+      @changeShowEdit="changeShowEdit"
     ></exercise-body>
     <exercise-under
       :lastIndex="lastIndex + 1"
@@ -16,7 +18,7 @@
       @next="next"
       @changeShowPanel="changeShowPanel"
     ></exercise-under>
-    <transition name="showPanel">
+    <transition name="Panel">
       <exercise-panel
         v-show="showPanel"
         ref="ExercisePanel"
@@ -24,6 +26,19 @@
         @changeShowPanel="changeShowPanel"
         @jumpTest="jumpTest"
       ></exercise-panel>
+    </transition>
+    <write-note-btn
+      :showWriteNoteBtn="showWriteNoteBtn"
+      @changeShowEdit="changeShowEdit"
+    ></write-note-btn>
+    <transition name="Edit">
+      <note-edit
+        v-show="showEdit"
+        ref="Edit"
+        :TestDataIndex="TestDataIndex"
+        :lastIndex="lastIndex"
+        @changeShowEdit="changeShowEdit"
+      ></note-edit>
     </transition>
   </div>
 </template>
@@ -33,6 +48,8 @@ import ExerciseHeader from './components/Header'
 import ExerciseBody from './components/Body'
 import ExerciseUnder from './components/Under'
 import ExercisePanel from './components/Panel'
+import WriteNoteBtn from './components/WriteNoteBtn'
+import NoteEdit from './components/Edit'
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Exercise',
@@ -40,7 +57,9 @@ export default {
     ExerciseHeader,
     ExerciseBody,
     ExerciseUnder,
-    ExercisePanel
+    ExercisePanel,
+    WriteNoteBtn,
+    NoteEdit
   },
   data () {
     return {
@@ -48,7 +67,8 @@ export default {
       propsShowIndexList: {},
       showPanel: false,
       lastShowPanel: null,
-      BodyListenKeydown: true
+      BodyListenKeydown: true,
+      showEdit: false
     }
   },
   computed: {
@@ -75,6 +95,9 @@ export default {
     },
     maxIndex () {
       return this.TestData[this.TestDataIndex].data.length - 1
+    },
+    showWriteNoteBtn () {
+      return this.TestDataIndex in this.UserData && this.lastIndex in this.UserData[this.TestDataIndex].data
     }
   },
   watch: {
@@ -98,7 +121,7 @@ export default {
         this.$nextTick(() => {
           this.$refs.ExercisePanel._activated()
         })
-      } else {
+      } else if (value === false) {
         this.BodyListenKeydown = true
         this.$nextTick(() => {
           this.$refs.ExercisePanel._deactivated()
@@ -113,6 +136,20 @@ export default {
       this.$nextTick(() => {
         this.$refs.ExercisePanel._deactivated()
       })
+    },
+    changeShowEdit (value) {
+      this.showEdit = value
+      if (value === true) {
+        this.BodyListenKeydown = false
+        this.$nextTick(() => {
+          this.$refs.Edit._activated()
+        })
+      } else if (value === false) {
+        this.BodyListenKeydown = true
+        this.$nextTick(() => {
+          this.$refs.Edit._deactivated()
+        })
+      }
     }
   },
   activated () {
@@ -135,17 +172,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .showPanel-enter,
-  .showPanel-leave-to
+  .Panel-enter,
+  .Panel-leave-to
     transform: translateY(100%)
     opacity: 0
-  .showPanel-enter-to,
-  .showPanel-leave
+  .Panel-enter-to,
+  .Panel-leave
     transform: translateY(0)
     opacity: 1
-  .showPanel-enter-active,
-  .showPanel-leave-active
+  .Panel-enter-active,
+  .Panel-leave-active
     transition: .3s
+
   .Exercise
     position: relative
     width: 100%
