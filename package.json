@@ -16,6 +16,8 @@
     "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.15.2",
     "fastclick": "^1.0.6",
+    "github-markdown-css": "^4.0.0",
+    "marked": "^1.1.1",
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "swiper": "^6.1.2",

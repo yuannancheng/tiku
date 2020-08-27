@@ -1,6 +1,6 @@
 <template>
   <div class="Exercise">
-    <exercise-header :TestDataIndex="TestDataIndex"></exercise-header>
+    <exercise-header :TestDataIndex="TestDataIndex" @changeShowSeach="changeShowSeach"></exercise-header>
     <exercise-body
       :DistributeData="[TestDataIndex, lastIndex, maxIndex]"
       :listenKeydown="BodyListenKeydown"
@@ -31,14 +31,20 @@
       :showWriteNoteBtn="showWriteNoteBtn"
       @changeShowEdit="changeShowEdit"
     ></write-note-btn>
-    <transition name="Edit">
-      <note-edit
-        v-show="showEdit"
-        ref="Edit"
+    <note-edit
+      v-show="showEdit"
+      ref="Edit"
+      :TestDataIndex="TestDataIndex"
+      :lastIndex="lastIndex"
+      @changeShowEdit="changeShowEdit"
+    ></note-edit>
+    <transition name="Seach">
+      <exercise-seach
+        v-show="showSeach"
         :TestDataIndex="TestDataIndex"
-        :lastIndex="lastIndex"
-        @changeShowEdit="changeShowEdit"
-      ></note-edit>
+        @changeShowSeach="changeShowSeach"
+        @jumpTest="jumpTest"
+      ></exercise-seach>
     </transition>
   </div>
 </template>
@@ -50,6 +56,7 @@ import ExerciseUnder from './components/Under'
 import ExercisePanel from './components/Panel'
 import WriteNoteBtn from './components/WriteNoteBtn'
 import NoteEdit from './components/Edit'
+import ExerciseSeach from './components/Seach'
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Exercise',
@@ -59,7 +66,8 @@ export default {
     ExerciseUnder,
     ExercisePanel,
     WriteNoteBtn,
-    NoteEdit
+    NoteEdit,
+    ExerciseSeach
   },
   data () {
     return {
@@ -68,7 +76,8 @@ export default {
       showPanel: false,
       lastShowPanel: null,
       BodyListenKeydown: true,
-      showEdit: false
+      showEdit: false,
+      showSeach: false
     }
   },
   computed: {
@@ -127,15 +136,18 @@ export default {
           this.$refs.ExercisePanel._deactivated()
         })
       }
+      if (this.showSeach === true) this.showSeach = false
     },
     jumpTest (id) {
       id = id - 1
       this.setTestLastIndex([this.TestDataIndex, id])
-      this.showPanel = false
       this.BodyListenKeydown = true
-      this.$nextTick(() => {
-        this.$refs.ExercisePanel._deactivated()
-      })
+      if (this.showPanel === true) {
+        this.showPanel = false
+        this.$nextTick(() => {
+          this.$refs.ExercisePanel._deactivated()
+        })
+      }
     },
     changeShowEdit (value) {
       this.showEdit = value
@@ -149,6 +161,15 @@ export default {
         this.$nextTick(() => {
           this.$refs.Edit._deactivated()
         })
+      }
+      if (this.showSeach === true) this.showSeach = false
+    },
+    changeShowSeach (value) {
+      this.showSeach = value
+      if (value === true) {
+        this.BodyListenKeydown = false
+      } else if (value === false) {
+        this.BodyListenKeydown = true
       }
     }
   },
@@ -175,13 +196,23 @@ export default {
   .Panel-enter,
   .Panel-leave-to
     transform: translateY(100%)
-    opacity: 0
+    // opacity: 0
   .Panel-enter-to,
   .Panel-leave
     transform: translateY(0)
-    opacity: 1
+    // opacity: 1
   .Panel-enter-active,
   .Panel-leave-active
+    transition: .3s
+
+  .Seach-enter,
+  .Seach-leave-to
+    transform: translateY(-100%)
+  .Seach-enter-to,
+  .Seach-leave
+    transform: translateY(0)
+  .Seach-enter-active,
+  .Seach-leave-active
     transition: .3s
 
   .Exercise

@@ -125,7 +125,7 @@ export default {
         }
       }
       if (this.TestDataIndex in this.UserNote && id in this.UserNote[this.TestDataIndex]) {
-        list.push('has-note')
+        list.push(['has-note', 'iconfont'])
       }
       return list
     },
@@ -304,7 +304,7 @@ export default {
             color: #fff
             background-color: #FDDC9A
           .activeIndex
-            &::before
+            &::after
               content: ''
               position: absolute
               left: 50%
@@ -320,5 +320,16 @@ export default {
               transform-origin: 0% 0%
           .has-note
             &::before
-              content: ''
+              content: '\e63e'
+              display: block
+              position: absolute
+              top: 0
+              right: 0
+              width: 15px
+              height: 15px
+              line-height: 100%
+              font-size: 15px
+              text-align: center
+              pointer-events: none
+              color: #FFFFFF
 </style>
