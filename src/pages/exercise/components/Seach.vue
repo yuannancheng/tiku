@@ -107,32 +107,7 @@ export default {
     SeachKeyWord () {
       if (this.keyWord.length >= 1) {
         var list = []
-        var reg = new RegExp(this.keyWord)
-        this.TestData[this.TestDataIndex].data.forEach((e) => {
-          var id = e.id
-          var thisList = {
-            'id': id,
-            'type': '题目',
-            'content': ''
-          }
-          if (e.title.indexOf(this.keyWord) !== -1) {
-            thisList.content += e.title
-          }
-          e.选项.forEach((f) => {
-            if (f.indexOf(this.keyWord) !== -1) {
-              thisList.content += f
-            }
-          })
-          if (thisList.content.length > 1) {
-            var position = thisList.content.indexOf(this.keyWord)
-            if (position > 13) {
-              console.log(thisList.content)
-              thisList.content = '...' + thisList.content.substring(position - 12, thisList.content.length)
-            }
-            thisList.content = thisList.content.replace(reg, '<span class="key">' + this.keyWord + '</span>')
-            list.push(thisList)
-          }
-        })
+        var reg = new RegExp(this.escapeRegExp(this.keyWord), 'g')
         if (this.TestDataIndex in this.UserNote) {
           for (var key in this.UserNote[this.TestDataIndex]) {
             var thisNote = this.UserNote[this.TestDataIndex][key]
@@ -151,6 +126,33 @@ export default {
             }
           }
         }
+        this.TestData[this.TestDataIndex].data.forEach((e) => {
+          var id = e.id
+          var thisList = {
+            'id': id,
+            'type': '题目',
+            'content': ''
+          }
+          if (e.title.indexOf(this.keyWord) !== -1) {
+            thisList.content += e.title
+          }
+          e.选项.forEach((f) => {
+            if (f.indexOf(this.keyWord) !== -1) {
+              thisList.content += f
+            }
+          })
+          if (thisList.content.length > 1) {
+            var position = thisList.content.indexOf(this.keyWord)
+            if (position > 13) {
+              thisList.content = thisList.content.substring(position - 12, thisList.content.length)
+            }
+            thisList.content = thisList.content.replace(reg, '<span class="key">' + this.keyWord + '</span>')
+            if (position > 13) { // 在标记后再添加省略号，避免用户搜索的是省略号本身
+              thisList.content = '...' + thisList.content
+            }
+            list.push(thisList)
+          }
+        })
         this.seachContent = list
         if (list.length === 0) this.$refs.tip.innerText = '没有找到匹配项…'
       } else this.seachContent = []
@@ -159,6 +161,9 @@ export default {
       this.$refs.input.blur()
       this.changeShowContent()
       this.$emit('jumpTest', id)
+    },
+    escapeRegExp (text) {
+      return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
     }
   },
   mounted () {
@@ -265,10 +270,27 @@ export default {
       user-select: none
       cursor: pointer
     .ctrlBtnMore
+      position: relative
       height: .5rem
       line-height: .5rem
-      background-color: #EEEEEE
+      background-color: #eee
       width: 100%
+      &::before
+        content: ''
+        position: absolute
+        width: 30%
+        height: 1px
+        background-color: #ccc
+        top: .249rem
+        left: 1rem
+      &::after
+        content: ''
+        position: absolute
+        width: 30%
+        height: 1px
+        background-color: #ccc
+        top: .249rem
+        right: 1rem
     .ctrlBtnLess
       position: absolute
       right: .95rem

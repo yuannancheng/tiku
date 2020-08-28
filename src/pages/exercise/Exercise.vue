@@ -1,6 +1,10 @@
 <template>
   <div class="Exercise">
-    <exercise-header :TestDataIndex="TestDataIndex" @changeShowSeach="changeShowSeach"></exercise-header>
+    <exercise-header
+      :TestDataIndex="TestDataIndex"
+      @changeShowSeach="changeShowSeach"
+      @changeShowCount="changeShowCount"
+    ></exercise-header>
     <exercise-body
       :DistributeData="[TestDataIndex, lastIndex, maxIndex]"
       :listenKeydown="BodyListenKeydown"
@@ -47,6 +51,16 @@
         @jumpTest="jumpTest"
       ></exercise-seach>
     </transition>
+    <transition name="Count">
+      <exercise-count
+        v-show="showCount"
+        :TestDataIndex="TestDataIndex"
+        :TestTitle="TestTitle"
+        :maxIndex="maxIndex"
+        @changeShowCount="changeShowCount"
+        @jumpTest="jumpTest"
+      ></exercise-count>
+    </transition>
   </div>
 </template>
 
@@ -58,6 +72,7 @@ import ExercisePanel from './components/Panel'
 import WriteNoteBtn from './components/WriteNoteBtn'
 import NoteEdit from './components/Edit'
 import ExerciseSeach from './components/Seach'
+import ExerciseCount from './components/Count'
 import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Exercise',
@@ -68,7 +83,8 @@ export default {
     ExercisePanel,
     WriteNoteBtn,
     NoteEdit,
-    ExerciseSeach
+    ExerciseSeach,
+    ExerciseCount
   },
   data () {
     return {
@@ -78,7 +94,8 @@ export default {
       lastShowPanel: null,
       BodyListenKeydown: true,
       showEdit: false,
-      showSeach: false
+      showSeach: false,
+      showCount: false
     }
   },
   computed: {
@@ -93,6 +110,12 @@ export default {
        * 但是回到主页后TestDataIndex计算结果必定为undefind，又导致lastIndex重新计算错误，还会影响Body页面错误
        * 故在此判断路由地址，如果不是答题界面，就返回上一次页面携带的参数，所有的结果也就不会重新计算了
       */
+    },
+    TestTitle () {
+      if (this.TestDataIndex in this.TestData && 'title' in this.TestData[this.TestDataIndex]) {
+        return this.TestData[this.TestDataIndex].title
+      }
+      return ''
     },
     lastIndex () {
       if (this.UserData && this.TestDataIndex in this.UserData) {
@@ -175,6 +198,14 @@ export default {
       } else if (value === false) {
         this.BodyListenKeydown = true
       }
+    },
+    changeShowCount (value) {
+      this.showCount = value
+      if (value === true) {
+        this.BodyListenKeydown = false
+      } else if (value === false) {
+        this.BodyListenKeydown = true
+      }
     }
   },
   activated () {
@@ -217,6 +248,16 @@ export default {
     transform: translateY(0)
   .Seach-enter-active,
   .Seach-leave-active
+    transition: .3s
+
+  .Count-enter,
+  .Count-leave-to
+    transform: translateY(-100%)
+  .Count-enter-to,
+  .Count-leave
+    transform: translateY(0)
+  .Count-enter-active,
+  .Count-leave-active
     transition: .3s
 
   .Exercise

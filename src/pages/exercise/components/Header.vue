@@ -24,7 +24,7 @@
         >
           <ul>
             <li class="iconfont" @click="changeShowSeach">&#xe6ea; 搜索</li>
-            <li class="iconfont">&#xe631; 统计</li>
+            <li class="iconfont" @click="changeShowCount">&#xe631; 统计</li>
             <li class="iconfont">&#xe601; 抽题</li>
           </ul>
         </div>
@@ -70,6 +70,10 @@ export default {
     },
     changeShowSeach () {
       this.$emit('changeShowSeach', true)
+      this.moreListShow = false
+    },
+    changeShowCount () {
+      this.$emit('changeShowCount', true)
       this.moreListShow = false
     }
   },

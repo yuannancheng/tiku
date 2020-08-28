@@ -74,5 +74,14 @@ export default {
     state.UserNote[tid][lid] = val
     if (val === '') delete state.UserNote[tid][lid]
     state.UserNote = Object.assign({}, state.UserNote)
+  },
+  redoOfTheTest (state, id) {
+    if (id in state.UserData) {
+      state.UserData[id] = {
+        'lastIndex': 0,
+        'data': {}
+      }
+      state.UserData = Object.assign({}, state.UserData)
+    }
   }
 }
