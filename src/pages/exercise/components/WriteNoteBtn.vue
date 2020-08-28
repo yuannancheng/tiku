@@ -110,7 +110,7 @@ export default {
       color: #4390ee
       background-color: #fff
       text-align: right
-      border: #4390ee 1px solid
+      border: #4390ee .8px solid
       border-radius: 50% 0 0 50%
       border-right: none
       box-sizing: border-box

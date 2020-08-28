@@ -125,8 +125,9 @@ export default {
           })
           if (thisList.content.length > 1) {
             var position = thisList.content.indexOf(this.keyWord)
-            if (position > 8) {
-              thisList.content = '...' + thisList.content.substring(position - 5, thisList.content.length)
+            if (position > 13) {
+              console.log(thisList.content)
+              thisList.content = '...' + thisList.content.substring(position - 12, thisList.content.length)
             }
             thisList.content = thisList.content.replace(reg, '<span class="key">' + this.keyWord + '</span>')
             list.push(thisList)
@@ -142,8 +143,8 @@ export default {
                 'type': '笔记',
                 'content': ''
               }
-              if (position > 8) {
-                thisNote = '...' + thisNote.substring(position - 5, thisNote.length)
+              if (position > 13) {
+                thisNote = '...' + thisNote.substring(position - 12, thisNote.length)
               }
               thisList.content += thisNote.replace(reg, '<span class="key">' + this.keyWord + '</span>')
               list.push(thisList)
