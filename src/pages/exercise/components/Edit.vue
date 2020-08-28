@@ -36,7 +36,8 @@ export default {
       validator (e) {
         return typeof (e * 1) === 'number'
       }
-    }
+    },
+    showEdit: Boolean
   },
   data () {
     return {
@@ -113,7 +114,7 @@ export default {
     width: inherit
     top: 0
     bottom: 0
-    background-color: rgba(0, 0, 0, .45)
+    background-color: rgba(0, 0, 0, 0.45)
     z-index: 3
     .wrap
       position: relative

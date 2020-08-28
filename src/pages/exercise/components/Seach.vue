@@ -1,11 +1,12 @@
 <template>
   <div class="seach">
     <div class="input-warp">
-      <input class="input" ref="input" v-model="keyWord" placeholder="搜索题目和笔记…" @input="SeachKeyWord" />
+      <input class="input" ref="input" v-model="keyWord" placeholder="搜索题目和笔记…" />
       <div class="close iconfont" @click="closeSeach">&#xe68b;</div>
     </div>
     <div :class="contentClassName()" ref="content">
       <ul>
+        <li v-show="!noData" class="results">共找到{{seachContent.length}}个匹配项</li>
         <li v-for="(item, index) of seachContent" :key="index" @click="jumpTest(item.id * 1 + 1)">
           <div class="SeachItem">
             <div class="type">{{item.type}}</div>
@@ -16,7 +17,7 @@
           </div>
         </li>
       </ul>
-      <div v-show="noData" class="noData">没有找到匹配项…</div>
+      <div ref="tip" v-show="noData" class="noData"></div>
     </div>
     <div v-show="showCtrlBtn" :class="ctrlBtnClassName()" @click="changeShowContent" v-html="ctrlBtnIcon"></div>
   </div>
@@ -46,8 +47,9 @@ export default {
         this.timer = null
       }
       this.timer = setTimeout(() => {
+        this.$refs.tip.innerText = '搜索中…'
         this.SeachKeyWord()
-      }, 300)
+      }, 100)
     },
     seachContent () {
       this.scroll.refresh()
@@ -149,6 +151,7 @@ export default {
           }
         }
         this.seachContent = list
+        if (list.length === 0) this.$refs.tip.innerText = '没有找到匹配项…'
       } else this.seachContent = []
     },
     jumpTest (id) {
@@ -208,6 +211,8 @@ export default {
       overflow: hidden
       .noData
         color: black
+      .results
+        color: black
       .SeachItem
         position: relative
         width: 100%
@@ -249,7 +254,7 @@ export default {
             .key
               color: red
     .more
-      height: 80vh
+      height: 70vh
     .less
       height: 0
     .ctrlBtn

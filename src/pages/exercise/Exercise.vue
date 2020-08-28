@@ -41,6 +41,7 @@
     <transition name="Seach">
       <exercise-seach
         v-show="showSeach"
+        ref="Seach"
         :TestDataIndex="TestDataIndex"
         @changeShowSeach="changeShowSeach"
         @jumpTest="jumpTest"
@@ -168,6 +169,9 @@ export default {
       this.showSeach = value
       if (value === true) {
         this.BodyListenKeydown = false
+        this.$nextTick(() => {
+          this.$refs.Seach.$refs.input.focus()
+        })
       } else if (value === false) {
         this.BodyListenKeydown = true
       }
