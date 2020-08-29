@@ -43,6 +43,7 @@
 <script>
 import { mapState } from 'vuex'
 import Bscroll from 'better-scroll'
+import _functions from '@functions/_functions'
 export default {
   name: 'ExercisePanel',
   props: {
@@ -110,7 +111,7 @@ export default {
     indexClassName (id) {
       var list = ['index']
       var lastIndex = this.UserData[this.TestDataIndex].lastIndex
-      if (lastIndex === id) list.push('activeIndex')
+      if (lastIndex === id) list.push(['activeIndex', 'iconfont'])
       if (id in this.UserData[this.TestDataIndex].data) {
         var fraction = this.UserData[this.TestDataIndex].data[id].fraction
         switch (fraction) {
@@ -130,7 +131,7 @@ export default {
       return list
     },
     _activated () {
-      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      if (_functions.IsPC()) {
         this.$refs.indexInput.focus()
       }
       window.addEventListener('keydown', this.handelKeydown)
@@ -305,18 +306,18 @@ export default {
             background-color: #FDDC9A
           .activeIndex
             &::after
-              content: ''
+              content: '\e603'
               position: absolute
               left: 50%
               top: 50%
-              height: 150%
-              width: 150%
-              background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAACXBIWXMAAA9hAAAPYQGoP6dpAAAF+mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDUgNzkuMTYzNDk5LCAyMDE4LzA4LzEzLTE2OjQwOjIyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIwLTA4LTEwVDExOjUzOjQ5KzA4OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIwLTA4LTEwVDExOjUzOjQ5KzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMC0wOC0xMFQxMTo1Mzo0OSswODowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozODk4OWEyOS0yMmMxLWRkNDgtYmY3My05NGU3ZTVkMjU4NmIiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDozNjViOWYyYy05ZjYxLTNlNGYtOWNiZS01NjUxZmZlZjA4MTkiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpiNDg1MWQ5OC0yMGFmLWFhNDYtYTUzYy0wMTcxMDY2YzM1YWYiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOmI0ODUxZDk4LTIwYWYtYWE0Ni1hNTNjLTAxNzEwNjZjMzVhZiIgc3RFdnQ6d2hlbj0iMjAyMC0wOC0xMFQxMTo1Mzo0OSswODowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDozODk4OWEyOS0yMmMxLWRkNDgtYmY3My05NGU3ZTVkMjU4NmIiIHN0RXZ0OndoZW49IjIwMjAtMDgtMTBUMTE6NTM6NDkrMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE5IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6tCk9XAAAB1klEQVR42u3bvQ2AIBCAUUncgBVYjolYjhWY4ey1vfiX90oKi4MvhMI9IjaeV8e8bMTqrZjMs3YjAIGAQEAgIBAQCAgEBAICAYEAAgGBgEBAICAQEAgIBARCKn8PCgQEAgIBgQACAYGAQEAgIBAQCAgEBAICAYEAAgGBgEBAICAQEAgIBAQCAgGBAAIBgYBAQCAgEBAICAQEAgIBBAICAYGAQEAgIBAQCAgEBAICAQQCAgGBgEBAICAQEAgIBAQCCAQEAgIBgYBAQCAgEBAICAQEAggEBAICAYGAQEAgIBAQCAgEEAgIBAQCAgGBgEBAICAQ+HMgdczI+NDqrRgnb5F1rt0gIBAQCAgEbg3E45o/yjrXbhAQCAgEBAICAYGAQEAgIBAQCCAQEAgIBAQCAgGBgEBAICAQEAggEBAICAQEAgIBgYBAQCAgEEAgIBAQCAgEBAICAYGAQEAgIBBAICAQEAgIBAQCAgGBgEBAIIBAQCAgEBAICAQEAgIBgYBAQCCAQEAgIBAQCAgEBAICAYGAQACBgEBAICAQEAgIBAQCAgGBgEAAgYBAPqeOGee11VsxGYGAQEAgIBAQCCAQEAgIBAQCAgGBgEBAICAQEAggEBAIpDgAXhEZFJLOlAUAAAAASUVORK5CYII=')
-              background-size: cover
+              height: 1.5rem
+              width: 1.5rem
+              line-height: 1.5rem
+              color: #4390EE
+              font-size: 1.5rem
               pointer-events: none
               transform: translate(-50%, -50%)
               animation: focus .5s linear infinite alternate
-              animation-delay: .5s
               transform-origin: 0% 0%
           .has-note
             &::before

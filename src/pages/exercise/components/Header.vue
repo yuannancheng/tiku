@@ -25,7 +25,7 @@
           <ul>
             <li class="iconfont" @click="changeShowSeach">&#xe6ea; 搜索</li>
             <li class="iconfont" @click="changeShowCount">&#xe631; 统计</li>
-            <li class="iconfont">&#xe601; 抽题</li>
+            <router-link to="/random" tag="li" class="iconfont">&#xe601; 抽题</router-link>
           </ul>
         </div>
       </transition>

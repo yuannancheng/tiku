@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import _functions from '@functions/_functions'
 export default {
   name: 'WriteNoteBtn',
   props: {
@@ -57,7 +58,7 @@ export default {
     },
     mouseEnter () {
       // 如果不是PC，就啥也不做
-      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      if (_functions.IsPC()) {
         if (!this.show) {
           this.show = true
         } else {
@@ -69,7 +70,7 @@ export default {
       }
     },
     mouseLeave () {
-      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      if (_functions.IsPC()) {
         this.timer = setTimeout(() => {
           this.show = false
           this.timer = null

@@ -52,10 +52,10 @@ export default {
     */
   },
   setOptionSelect (state, data) {
-    var tid = data[0] // 题库id
-    var lid = data[1] // 题号
-    var opt = data[2] // 选项
-    var fra = data[3] // 分数
+    const tid = data[0] // 题库id
+    const lid = data[1] // 题号
+    const opt = data[2] // 选项
+    const fra = data[3] // 分数
     if (!(lid in state.UserData[tid].data)) {
       state.UserData[tid].data[lid] = {
         'userSelect': [],
@@ -67,9 +67,9 @@ export default {
     state.UserData = Object.assign({}, state.UserData)
   },
   setUserNote (state, data) {
-    var tid = data[0] // 题库id
-    var lid = data[1] // 题号
-    var val = data[2] // 笔记内容
+    const tid = data[0] // 题库id
+    const lid = data[1] // 题号
+    const val = data[2] // 笔记内容
     if (!(tid in state.UserNote)) state.UserNote[tid] = {}
     state.UserNote[tid][lid] = val
     if (val === '') delete state.UserNote[tid][lid]
@@ -83,5 +83,25 @@ export default {
       }
       state.UserData = Object.assign({}, state.UserData)
     }
+  },
+  createRandomData (state, Test) {
+    const createTime = new Date().getTime()
+    const duration = 0
+    const initData = {
+      'create': createTime,
+      'duration': duration,
+      'data': {
+        'Test': Test,
+        'record': {}
+      }
+    }
+    if (!('Random' in state.UserData)) state.UserData.Random = []
+    state.UserData.Random.push(initData)
+    state.UserData = Object.assign({}, state.UserData)
+    console.log('初始化随机数据完成')
+  },
+  setRandomData (state, data) {
+    // const TestDataId = data[0]
+    // const index = data[1]
   }
 }

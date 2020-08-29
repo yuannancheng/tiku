@@ -33,7 +33,7 @@
                 accept=".json"
               />
             </li>
-            <li>下载工具</li>
+            <li @click="handelDownloadTool">下载工具</li>
           </ul>
         </div>
       </transition>
@@ -43,6 +43,7 @@
 
 <script>
 import clickoutside from '@functions/clickoutside'
+import _functions from '@functions/_functions'
 import { mapMutations } from 'vuex'
 export default {
   name: 'HomeHeader',
@@ -69,7 +70,14 @@ export default {
   methods: {
     ...mapMutations(['importTestData']),
     handleFeedBackClick () {
-      alert('发现问题了？\n快来告诉我吧！')
+      if (confirm('发现问题了？\n快来告诉我吧！')) {
+        _functions.CallQQ(1470983522)
+      }
+    },
+    handelDownloadTool () {
+      if (confirm('将要下载题库提取工具（约15MB），是否继续？')) {
+        window.location.href = 'http://sinacloud.net/myfiles/tiku/%E9%A2%98%E5%BA%93%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7.zip'
+      }
     },
     importFileAddressChange (e) {
       var _this = this

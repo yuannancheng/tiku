@@ -63,6 +63,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import marked from 'marked'
+import _functions from '@functions/_functions'
 marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
@@ -247,6 +248,7 @@ export default {
               setTimeout(() => {
                 this.$delete(this.shakeOptions, [id])
               }, 2000)
+              _functions.vibrate() // 答错震动
             }
             if (fraction === 1) {
               setTimeout(() => {
@@ -272,6 +274,7 @@ export default {
           break
       }
     },
+    // 多选题计分
     handelMultipleChoice (id) {
       if (
         id in this.userSelect &&
@@ -293,8 +296,8 @@ export default {
         for (var i = 0; i < elements.length; i++) {
           var td = String.fromCharCode(65 + i)
           if (
-            (!selectYes.includes(td) && !answer.includes(td)) ||
-            (!select.includes(td) && answer.includes(td))
+            ((!selectYes.includes(td)) && (answer.includes(td))) ||
+            ((select.includes(td)) && (!answer.includes(td)))
           ) {
             shakeOptions.push(td)
           }
@@ -303,6 +306,7 @@ export default {
         setTimeout(() => {
           this.$delete(this.shakeOptions, [id])
         }, 2000)
+        if (shakeOptions.length > 0) _functions.vibrate()
         // 答对切换下一题
         if (fraction === 1) {
           setTimeout(() => {
@@ -378,7 +382,7 @@ export default {
     // 如果是PC端，就添加禁止滑动的className
     swiperNoSwiping (list) {
       list = typeof list === 'object' ? list : []
-      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      if (_functions.IsPC()) {
         list.push('swiper-no-swiping')
       }
       return list

@@ -80,7 +80,6 @@ export default {
       }
     },
     redoTest () {
-      console.log('click')
       if (confirm('是否重做当前题库？\n这不会删除你的笔记')) {
         this.redoOfTheTest(this.TestDataIndex)
         this.$emit('jumpTest', 1)

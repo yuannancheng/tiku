@@ -103,7 +103,11 @@ export default {
     ...mapState(['TestData', 'UserData']),
     TestDataIndex () {
       if (this.$route.name === 'Exercise') {
-        return this.$route.params.id * 1
+        if (
+          this.$route.params.id &&
+          typeof (this.$route.params.id * 1) === 'number'
+        ) return this.$route.params.id * 1
+        return 0
       }
       return this.lastRouteId
       /*
@@ -201,7 +205,6 @@ export default {
       }
     },
     changeShowCount (value) {
-      console.log('关闭显示统计')
       this.showCount = value
       if (value === true) {
         this.BodyListenKeydown = false
