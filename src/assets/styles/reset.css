@@ -87,7 +87,6 @@ strong {
 address,
 cite,
 dfn,
-em,
 i,
 optgroup,
 var {
@@ -181,8 +180,7 @@ mark {
 a,
 ins,
 s,
-u,
-del {
+u {
     text-decoration: none
 }
  

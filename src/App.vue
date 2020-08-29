@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <hot-key></hot-key>
     <keep-alive>
       <router-view/>
     </keep-alive>
@@ -10,8 +11,12 @@
 import axios from 'axios'
 import { mapState, mapMutations } from 'vuex'
 import { localStorageSetItem } from './store/TestDataInit/localStorageSetItem'
+import HotKey from './pages/HotKey'
 export default {
   name: 'App',
+  components: {
+    HotKey
+  },
   computed: {
     ...mapState(['TestData', 'UserNote', 'UserData'])
   },

@@ -31,6 +31,7 @@ export default {
   .Home
     width: 100%
     padding-top: .95rem
+    background-color: #fff
   @media (min-width: 700px)
     .Home
       width: 700px

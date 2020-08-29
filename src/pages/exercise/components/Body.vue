@@ -4,13 +4,13 @@
       <swiper-slide
         v-for="TestId of showTestList"
         :key="TestId"
-        class="TestContent"
+        :class="swiperNoSwiping(['TestContent'])"
       >
         <template v-if="thisTestData[TestId]"><!-- 避免数据还没加载出来时报错 -->
           <div class="type">{{thisTestData[TestId].题型}}</div>
           <div class="testInfo">
             <div class="id">{{TestId + 1}}.</div>
-            <div class="title swiper-no-swiping">{{thisTestData[TestId].title}}</div>
+            <div class="title">{{thisTestData[TestId].title}}</div>
           </div>
           <template v-if="testType(TestId, '判断')">
             <div
@@ -374,6 +374,14 @@ export default {
         '<p style="padding-bottom: .1rem;border-bottom: #eee 1px solid;font-weight: 900;">我的笔记</0>' +
         marked(userNote)
       )
+    },
+    // 如果是PC端，就添加禁止滑动的className
+    swiperNoSwiping (list) {
+      list = typeof list === 'object' ? list : []
+      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        list.push('swiper-no-swiping')
+      }
+      return list
     }
   },
   watch: {

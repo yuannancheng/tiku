@@ -268,6 +268,7 @@ export default {
     min-height: 100vh
     padding: .95rem 0
     box-sizing: border-box
+    background-color: #fff
   @media (min-width: 700px)
     .Exercise
       width: 700px
