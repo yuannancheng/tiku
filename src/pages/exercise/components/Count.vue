@@ -33,7 +33,8 @@ export default {
   props: {
     TestDataIndex: Number,
     maxIndex: Number,
-    TestTitle: String
+    TestTitle: String,
+    showCount: Boolean
   },
   computed: {
     ...mapState(['UserData']),
@@ -74,7 +75,9 @@ export default {
   methods: {
     ...mapMutations(['redoOfTheTest']),
     closeCount () {
-      this.$emit('changeShowCount', false)
+      if (this.showCount === true) {
+        this.$emit('changeShowCount', false)
+      }
     },
     redoTest () {
       console.log('click')

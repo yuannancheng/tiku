@@ -106,7 +106,9 @@ export default {
       }
     },
     handleMoreOutClick () {
-      this.moreListShow = false
+      if (this.moreListShow === true) {
+        this.moreListShow = false
+      }
     },
     editTestData () {
       this.moreBtnContentStyle.fontSize = '.34rem'

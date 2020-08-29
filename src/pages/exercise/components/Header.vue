@@ -66,7 +66,9 @@ export default {
       this.moreListShow = !this.moreListShow
     },
     handleMoreOutClick () {
-      this.moreListShow = false
+      if (this.moreListShow === true) {
+        this.moreListShow = false
+      }
     },
     changeShowSeach () {
       this.$emit('changeShowSeach', true)

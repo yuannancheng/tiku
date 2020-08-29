@@ -57,6 +57,7 @@
         :TestDataIndex="TestDataIndex"
         :TestTitle="TestTitle"
         :maxIndex="maxIndex"
+        :showCount="showCount"
         @changeShowCount="changeShowCount"
         @jumpTest="jumpTest"
       ></exercise-count>
@@ -200,6 +201,7 @@ export default {
       }
     },
     changeShowCount (value) {
+      console.log('关闭显示统计')
       this.showCount = value
       if (value === true) {
         this.BodyListenKeydown = false

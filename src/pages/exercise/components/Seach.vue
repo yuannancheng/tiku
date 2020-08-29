@@ -46,10 +46,17 @@ export default {
         clearTimeout(this.timer)
         this.timer = null
       }
-      this.timer = setTimeout(() => {
-        this.$refs.tip.innerText = '搜索中…'
-        this.SeachKeyWord()
-      }, 100)
+      if (this.keyWord.length >= 1) {
+        if (this.keyWord.length >= 2) {
+          this.$refs.tip.innerText = '搜索中…'
+          this.timer = setTimeout(() => {
+            this.SeachKeyWord()
+          }, 100)
+        } else {
+          this.$refs.tip.innerText = '请至少输入2个关键字'
+          this.seachContent = []
+        }
+      } else this.seachContent = []
     },
     seachContent () {
       this.scroll.refresh()
@@ -105,57 +112,55 @@ export default {
       e.preventDefault()
     },
     SeachKeyWord () {
-      if (this.keyWord.length >= 1) {
-        var list = []
-        var reg = new RegExp(this.escapeRegExp(this.keyWord), 'g')
-        if (this.TestDataIndex in this.UserNote) {
-          for (var key in this.UserNote[this.TestDataIndex]) {
-            var thisNote = this.UserNote[this.TestDataIndex][key]
-            var position = thisNote.indexOf(this.keyWord)
-            if (position > -1) {
-              var thisList = {
-                'id': key,
-                'type': '笔记',
-                'content': ''
-              }
-              if (position > 13) {
-                thisNote = '...' + thisNote.substring(position - 12, thisNote.length)
-              }
-              thisList.content += thisNote.replace(reg, '<span class="key">' + this.keyWord + '</span>')
-              list.push(thisList)
+      var list = []
+      var reg = new RegExp(this.escapeRegExp(this.keyWord), 'g')
+      if (this.TestDataIndex in this.UserNote) {
+        for (var key in this.UserNote[this.TestDataIndex]) {
+          var thisNote = this.UserNote[this.TestDataIndex][key]
+          var position = thisNote.indexOf(this.keyWord)
+          if (position > -1) {
+            var thisList = {
+              'id': key,
+              'type': '笔记',
+              'content': ''
             }
-          }
-        }
-        this.TestData[this.TestDataIndex].data.forEach((e) => {
-          var id = e.id
-          var thisList = {
-            'id': id,
-            'type': '题目',
-            'content': ''
-          }
-          if (e.title.indexOf(this.keyWord) !== -1) {
-            thisList.content += e.title
-          }
-          e.选项.forEach((f) => {
-            if (f.indexOf(this.keyWord) !== -1) {
-              thisList.content += f
-            }
-          })
-          if (thisList.content.length > 1) {
-            var position = thisList.content.indexOf(this.keyWord)
             if (position > 13) {
-              thisList.content = thisList.content.substring(position - 12, thisList.content.length)
+              thisNote = '...' + thisNote.substring(position - 12, thisNote.length)
             }
-            thisList.content = thisList.content.replace(reg, '<span class="key">' + this.keyWord + '</span>')
-            if (position > 13) { // 在标记后再添加省略号，避免用户搜索的是省略号本身
-              thisList.content = '...' + thisList.content
-            }
+            thisList.content += thisNote.replace(reg, '<span class="key">' + this.keyWord + '</span>')
             list.push(thisList)
           }
+        }
+      }
+      this.TestData[this.TestDataIndex].data.forEach((e) => {
+        var id = e.id
+        var thisList = {
+          'id': id,
+          'type': '题目',
+          'content': ''
+        }
+        if (e.title.indexOf(this.keyWord) !== -1) {
+          thisList.content += e.title
+        }
+        e.选项.forEach((f) => {
+          if (f.indexOf(this.keyWord) !== -1) {
+            thisList.content += f
+          }
         })
-        this.seachContent = list
-        if (list.length === 0) this.$refs.tip.innerText = '没有找到匹配项…'
-      } else this.seachContent = []
+        if (thisList.content.length > 1) {
+          var position = thisList.content.indexOf(this.keyWord)
+          if (position > 13) {
+            thisList.content = thisList.content.substring(position - 12, thisList.content.length)
+          }
+          thisList.content = thisList.content.replace(reg, '<span class="key">' + this.keyWord + '</span>')
+          if (position > 13) { // 在标记后再添加省略号，避免用户搜索的是省略号本身
+            thisList.content = '...' + thisList.content
+          }
+          list.push(thisList)
+        }
+      })
+      this.seachContent = list
+      if (list.length === 0) this.$refs.tip.innerText = '没有找到匹配项…'
     },
     jumpTest (id) {
       this.$refs.input.blur()
