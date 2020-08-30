@@ -1,6 +1,6 @@
 <template>
   <div class="random-body">
-    <div class="create-random">
+    <div class="create-random" @click="changeShowCreate">
       <span class="icon iconfont">&#xe604;</span>
       <span class="text">新建抽题</span>
     </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import _functions from '@functions/_functions'
 export default {
   name: 'RandomBody',
@@ -32,6 +32,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['createRandomData']),
     computeCreateTime (time) { // 创建时间
       return _functions.formatTime(time)
     },
@@ -66,6 +67,9 @@ export default {
         return accuracy
       }
       return '&#xe6c1; -'
+    },
+    changeShowCreate () {
+      this.$emit('changeShowCreate', true)
     }
   }
 }
@@ -86,21 +90,21 @@ export default {
       margin: 0 auto
       padding-top: .1rem
       text-align: center
-      background-color: #eee
+      background-color: #C9E9FF
       cursor: pointer
       &:hover
-        background-color: #e1e1e1
+        background-color: #D3EDFF
       .icon
         display: block
         font-size: 1rem
         border-radius: 50%
-        color: #999
+        color: #4390ee
       .text
         display: block
         margin-top: .05rem
         font-size: .34rem
         font-weight: 900
-        color: #999
+        color: #4390ee
     .history-random
       .history
         position: relative
@@ -117,7 +121,7 @@ export default {
         margin: .2rem auto
         padding: .2rem
         width: 95%
-        height: 1.5rem
+        min-height: 1.5rem
         background-color: #eee
         cursor: pointer
         &>*

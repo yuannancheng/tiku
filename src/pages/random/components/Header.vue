@@ -36,7 +36,7 @@ export default {
     color: $btnTxtColor
     background-color: #fff
     box-shadow: #ccc 0 0 7px
-    z-index: 2
+    z-index: 1
     user-select: none
     .back,
     .title
