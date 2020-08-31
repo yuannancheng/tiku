@@ -240,7 +240,7 @@ export default {
         let thisResult = []
         if (this.rangeLeft !== '') i = this.rangeLeft
         if (this.rangeRight !== '') thisMax = this.rangeRight
-        for (; i < thisMax; i++) {
+        for (; i <= thisMax; i++) {
           arr.push(i)
         }
         for (let i = 0; i < thisLength; i++) {
@@ -258,7 +258,7 @@ export default {
       this.rangeRight = ''
       this.length = ''
       this.closeCreate()
-      this.$emit('changeTestDataIndex', 0)
+      this.$emit('changeTestDataIndex', true)
       this.$emit('changeShowExercise', true)
       this.creating = false
     }

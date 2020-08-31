@@ -156,10 +156,9 @@ export default {
 
 <style lang="stylus" scpoed>
   .random-exercise
-    position: fixed
-    top: 0
+    position: relative
     width: inherit
-    padding-top: .95rem
+    padding-bottom: .95rem
     min-height: 100vh
     box-sizing: border-box
 </style>

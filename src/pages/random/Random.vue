@@ -17,6 +17,7 @@
     </transition>
     <random-exercise
       v-show="showExercise"
+      ref="RandomExercise"
       :showExercise="showExercise"
       :TestDataIndex="TestDataIndex"
       @changeShowExercise="changeShowExercise"
@@ -53,7 +54,12 @@ export default {
       this.showExercise = value
     },
     changeTestDataIndex (value) {
-      this.TestDataIndex = value
+      if (value === true) {
+        this.TestDataIndex = 0
+        this.$refs.RandomExercise.$refs.RandomExercisePanel.computeTestList()
+      } else {
+        this.TestDataIndex = value
+      }
     }
   },
   beforeRouteEnter (to, from, next) {

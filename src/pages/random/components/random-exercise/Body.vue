@@ -10,7 +10,7 @@
         <template v-if="thisTestData(TestArr[0])"><!-- 避免数据还没加载出来时报错 -->
           <div class="type">{{thisTestData(TestArr[0]).题型}}</div>
           <div class="testInfo">
-            <div class="id">{{(TestArr[0][0] * 1 + 1) + '-' + (TestArr[0][1] + 1)}}.</div>
+            <div class="id">{{(TestArr[0][0] * 1 + 1) + '-' + (TestArr[0][1] * 1 + 1)}}.</div>
             <div class="title">{{thisTestData(TestArr[0]).title}}</div>
           </div>
           <template v-if="testType(TestArr[0], '判断')">
