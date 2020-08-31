@@ -2,56 +2,57 @@
   <div class="body">
     <swiper ref="mySwiper" :options="swiperOptions">
       <swiper-slide
-        v-for="TestId of showTestList"
-        :key="TestId"
+        v-for="TestArr of showTestList"
+        :key="TestArr[0][0] + ',' + TestArr[0][1]"
         :class="swiperNoSwiping(['TestContent'])"
+        v-if="TestArr[0]"
       >
-        <template v-if="thisTestData[TestId]"><!-- 避免数据还没加载出来时报错 -->
-          <div class="type">{{thisTestData[TestId].题型}}</div>
+        <template v-if="thisTestData(TestArr[0])"><!-- 避免数据还没加载出来时报错 -->
+          <div class="type">{{thisTestData(TestArr[0]).题型}}</div>
           <div class="testInfo">
-            <div class="id">{{TestId + 1}}.</div>
-            <div class="title">{{thisTestData[TestId].title}}</div>
+            <div class="id">{{(TestArr[0][0] * 1 + 1) + '-' + (TestArr[0][1] + 1)}}.</div>
+            <div class="title">{{thisTestData(TestArr[0]).title}}</div>
           </div>
-          <template v-if="testType(TestId, '判断')">
+          <template v-if="testType(TestArr[0], '判断')">
             <div
               v-for="content of ['对', '错']"
               :key="content"
-              :class="optionClassName(TestId, '判断', content)"
-              @click="handelOptionSelect(TestId, '判断', content)"
+              :class="optionClassName(TestArr, '判断', content)"
+              @click="handelOptionSelect(TestArr, '判断', content)"
             >{{content}}</div>
           </template>
-          <template v-else-if="testType(TestId, '单选')">
+          <template v-else-if="testType(TestArr[0], '单选')">
             <div
-              v-for="(content, optionId) of thisTestData[TestId].选项"
+              v-for="(content, optionId) of thisTestData(TestArr[0]).选项"
               :key="String.fromCharCode(65 + optionId)"
-              :class="optionClassName(TestId, '单选', String.fromCharCode(65 + optionId))"
-              @click="handelOptionSelect(TestId, '单选', String.fromCharCode(65 + optionId))"
+              :class="optionClassName(TestArr, '单选', String.fromCharCode(65 + optionId))"
+              @click="handelOptionSelect(TestArr, '单选', String.fromCharCode(65 + optionId))"
             >{{content}}</div>
           </template>
-          <template v-else-if="testType(TestId, '多选')">
+          <template v-else-if="testType(TestArr[0], '多选')">
             <div
-              v-for="(content, optionId) of thisTestData[TestId].选项"
+              v-for="(content, optionId) of thisTestData(TestArr[0]).选项"
               :key="String.fromCharCode(65 + optionId)"
-              :class="optionClassName(TestId, '多选', String.fromCharCode(65 + optionId))"
-              @click="handelOptionSelect(TestId, '多选', String.fromCharCode(65 + optionId))"
+              :class="optionClassName(TestArr, '多选', String.fromCharCode(65 + optionId))"
+              @click="handelOptionSelect(TestArr, '多选', String.fromCharCode(65 + optionId))"
             >{{content}}</div>
             <div
-              v-if="showSubmitBtn(TestId)"
-              :class="submitClassName(TestId)"
-              @click="handelMultipleChoice(TestId)"
+              v-if="showSubmitBtn(TestArr[1])"
+              :class="submitClassName(TestArr[1])"
+              @click="handelMultipleChoice(TestArr)"
             >确定</div>
           </template>
           <div
-            v-if="showAnswer(TestId)"
+            v-if="showAnswer(TestArr[1])"
             class="answerAndFraction"
           >
-            <span class="answer">正确答案：{{getAnswerAndFraction(TestId)[0].join('、')}}</span>
-            <span class="fraction">得分：{{getAnswerAndFraction(TestId)[1]}}</span>
+            <span class="answer">正确答案：{{getAnswerAndFraction(TestArr)[0].join('、')}}</span>
+            <span class="fraction">得分：{{getAnswerAndFraction(TestArr)[1]}}</span>
           </div>
           <div
-            v-if="showUserNote(TestId)"
+            v-if="showUserNote(TestArr)"
             class="markdown-body"
-            v-html="userNoteContent(TestId)"
+            v-html="userNoteContent(TestArr[0])"
           ></div>
         </template>
       </swiper-slide>
@@ -74,15 +75,9 @@ marked.setOptions({
   smartypants: false
 })
 export default {
-  name: 'ExerciseBody',
+  name: 'RandomExerciseBody',
   props: {
-    DistributeData: {
-      default: [0, 0, 100],
-      validator (e) {
-        return typeof (e[0] * 1) === 'number' && typeof (e[1] * 1) === 'number' && typeof (e[2] * 1) === 'number'
-      }
-    },
-    listenKeydown: Boolean,
+    TestDataIndex: Number,
     showWriteNoteBtn: Boolean
   },
   data () {
@@ -93,7 +88,7 @@ export default {
         initialSlide: this.activeId,
         on: {
           slideChangeTransitionEnd () {
-            this._this.setTestLastIndex([this._this.TestDataIndex, this._this.showTestList[this.activeIndex]])
+            this._this.setRandomDataLastIndex([this._this.TestDataIndex, this._this.showTestList[this.activeIndex][1]])
             document.documentElement.scrollTo({
               top: 0,
               behavior: 'smooth'
@@ -106,52 +101,70 @@ export default {
       activeId: 0, // 展示给用户的题目在showTestList中的下标
       userSelect: {}, // 用户预选的选项，在用户点击确定按钮后清除当前题目的预选
       shakeOptions: {}, // 需要警告的选项，用户选错/应选却没选的
-      Timer: null // 键盘事件函数节流
+      Timer: null, // 键盘事件函数节流
+      Interval: null // 答题计时器
     }
   },
   computed: {
     ...mapState(['TestData', 'UserData', 'UserNote']),
-    thisTestData () {
-      return this.TestData[this.lastTestDataIndex].data
-    },
     swiper () {
       return this.$refs.mySwiper.$swiper
     },
-    TestDataIndex () {
-      return this.DistributeData[0]
-    },
     lastIndex () {
-      return this.DistributeData[1]
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) return this.UserData.Random[this.TestDataIndex].lastIndex
     },
     maxIndex () {
-      return this.DistributeData[2]
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) return this.UserData.Random[this.TestDataIndex].data.Test.length - 1
+    },
+    finishRandomTest () {
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random &&
+        Object.keys(this.UserData.Random[this.TestDataIndex].data.record).length >=
+        this.UserData.Random[this.TestDataIndex].data.Test.length
+      ) return true
+      return false
     }
   },
   methods: {
-    ...mapMutations(['setTestLastIndex', 'setOptionSelect']),
+    ...mapMutations(['setRandomDataLastIndex', 'setRandomOptionSelect', 'setRandomTestTiming']),
+    thisTestData (arr) {
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random &&
+        typeof arr === 'object'
+      ) return this.TestData[arr[0]].data[arr[1]]
+    },
     // 计算需要动态加载的题目
-    computeShowList (id) {
-      id = id || this.lastIndex
-      var avtive = 1
-      var list = []
+    computeShowList (index) {
+      index = index || this.lastIndex
+      let arr = this.UserData.Random[this.TestDataIndex].data.Test
+      let avtive = 1
+      let list = []
       if (this.maxIndex <= 3) {
-        for (let i = 0; i < this.maxIndex; i++) {
-          list.push(i)
+        for (let i = 0; i <= this.maxIndex; i++) {
+          list.push([arr[i], i])
         }
-        avtive = id
-        if (id > this.maxIndex) avtive = this.maxIndex
-        if (id < 0) avtive = 0
-      } else if (id < 1) {
+        avtive = index
+        if (index > this.maxIndex) avtive = this.maxIndex
+        if (index < 0) avtive = 0
+      } else if (index < 1) {
         avtive = 0
-        list[0] = 0
-        list[1] = 1
-      } else if (id >= this.maxIndex) {
-        list[0] = this.maxIndex - 1
-        list[1] = this.maxIndex
+        list[0] = [arr[0], 0]
+        list[1] = [arr[1], 1]
+      } else if (index >= this.maxIndex) {
+        list[0] = [arr[this.maxIndex - 1], this.maxIndex - 1]
+        list[1] = [arr[this.maxIndex], this.maxIndex]
       } else {
-        list[0] = id - 1
-        list[1] = id
-        list[2] = id + 1
+        list[0] = [arr[index - 1], index - 1]
+        list[1] = [arr[index], index]
+        list[2] = [arr[index + 1], index * 1 + 1]
       }
       this.avtiveId = avtive
       this.showTestList = list
@@ -161,25 +174,26 @@ export default {
       })
     },
     // 用于v-if计算加载哪种答题框架
-    testType (id, type) {
-      return this.thisTestData[id].题型 === type
+    testType (arr, type) {
+      return this.thisTestData(arr).题型 === type
     },
     // 计算选项需要绑定哪些样式
-    optionClassName (id, type, options) {
-      var className = ['options']
-      var thisUserData = this.UserData[this.TestDataIndex].data
+    optionClassName (arr, type, options) {
+      let index = arr[1]
+      let className = ['options']
+      let thisUserData = this.UserData.Random[this.TestDataIndex].data.record
       switch (type) {
         case '判断':
         case '单选':
           if (
-            id in thisUserData &&
-            thisUserData[id].userSelect.length > 0
+            index in thisUserData &&
+            thisUserData[index].userSelect.length > 0
           ) {
-            if (this.thisTestData[id].正确答案.includes(options)) {
+            if (this.thisTestData(arr[0]).正确答案.includes(options)) {
               className.push('select-yes')
-            } else if (thisUserData[id].userSelect.includes(options)) {
+            } else if (thisUserData[index].userSelect.includes(options)) {
               className.push('select-no')
-              if (id in this.shakeOptions && this.shakeOptions[id].includes(options)) {
+              if (index in this.shakeOptions && this.shakeOptions[index].includes(options)) {
                 className.push('animate__animated', 'animate__headShake') // animate__shakeX 摇晃得更厉害
               }
             }
@@ -187,26 +201,26 @@ export default {
           break
         case '多选':
           if (
-            id in thisUserData &&
-            thisUserData[id].userSelect.length > 0
+            index in thisUserData &&
+            thisUserData[index].userSelect.length > 0
           ) {
-            if (this.thisTestData[id].正确答案.includes(options)) {
-              if (thisUserData[id].userSelect.includes(options)) {
+            if (this.thisTestData(arr[0]).正确答案.includes(options)) {
+              if (thisUserData[index].userSelect.includes(options)) {
                 className.push('select-yes')
               } else {
                 className.push('noselect-answer')
-                if (id in this.shakeOptions && this.shakeOptions[id].includes(options)) {
+                if (index in this.shakeOptions && this.shakeOptions[index].includes(options)) {
                   className.push('animate__animated', 'animate__headShake')
                 }
               }
-            } else if (thisUserData[id].userSelect.includes(options)) {
+            } else if (thisUserData[index].userSelect.includes(options)) {
               className.push('select-no')
-              if (id in this.shakeOptions && this.shakeOptions[id].includes(options)) {
+              if (index in this.shakeOptions && this.shakeOptions[index].includes(options)) {
                 className.push('animate__animated', 'animate__headShake')
               }
             }
-          } else if (id in this.userSelect && this.userSelect[id].length > 0) {
-            if (this.userSelect[id].includes(options)) {
+          } else if (index in this.userSelect && this.userSelect[index].length > 0) {
+            if (this.userSelect[index].includes(options)) {
               // 绑定预选样式
               className.push('select-assum')
             }
@@ -216,39 +230,40 @@ export default {
       return className
     },
     // 计算多选题确定按钮的样式
-    submitClassName (id) {
-      var className = ['submit']
-      if (id in this.userSelect && this.userSelect[id].length >= 2) {
+    submitClassName (index) {
+      let className = ['submit']
+      if (index in this.userSelect && this.userSelect[index].length >= 2) {
         className.push('canSubmit')
       }
       return className
     },
     // 计算是否展示确定按钮
-    showSubmitBtn (id) {
+    showSubmitBtn (index) {
       return !(
-        id in this.UserData[this.TestDataIndex].data &&
-        this.UserData[this.TestDataIndex].data[id].userSelect.length >= 2
+        index in this.UserData.Random[this.TestDataIndex].data.record &&
+        this.UserData.Random[this.TestDataIndex].data.record[index].userSelect.length >= 2
       )
     },
     // 处理计算分数/绑定预选
-    handelOptionSelect (id, type, options) {
+    handelOptionSelect (arr, type, options) {
+      let index = arr[1]
       // var el = event.toElement
-      var thisUserData = this.UserData[this.TestDataIndex].data
+      let thisUserData = this.UserData.Random[this.TestDataIndex].data.record
       switch (type) {
         case '判断':
         case '单选':
           if (
-            id in thisUserData &&
-            thisUserData[id].userSelect.length > 0
+            index in thisUserData &&
+            thisUserData[index].userSelect.length > 0
           ) return false // 已经选择过答案，不能触发
           else {
             var fraction = 0
-            if (this.thisTestData[id].正确答案.includes(options)) {
+            if (this.thisTestData(arr[0]).正确答案.includes(options)) {
               fraction = 1
             } else {
-              this.$set(this.shakeOptions, [id], options)
+              this.$set(this.shakeOptions, [index], options)
               setTimeout(() => {
-                this.$delete(this.shakeOptions, [id])
+                this.$delete(this.shakeOptions, [index])
               }, 2000)
               _functions.vibrate() // 答错震动
             }
@@ -257,33 +272,34 @@ export default {
                 this.swiper.slideNext()
               }, 500)
             }
-            this.setOptionSelect([this.TestDataIndex, this.lastIndex, options, fraction])
+            this.setRandomOptionSelect([this.TestDataIndex, this.lastIndex, options, fraction])
           }
           break
         case '多选':
-          if (id in this.userSelect) {
-            if (this.userSelect[id].includes(options)) {
-              this.userSelect[id].splice(this.userSelect[id].indexOf(options), 1)
-              if (this.userSelect[id].length === 0) {
-                this.$delete(this.userSelect, [id])
+          if (index in this.userSelect) {
+            if (this.userSelect[index].includes(options)) {
+              this.userSelect[index].splice(this.userSelect[index].indexOf(options), 1)
+              if (this.userSelect[index].length === 0) {
+                this.$delete(this.userSelect, [index])
               }
             } else {
-              this.userSelect[id].push(options)
+              this.userSelect[index].push(options)
             }
           } else {
-            this.$set(this.userSelect, [id], [options])
+            this.$set(this.userSelect, [index], [options])
           }
           break
       }
     },
     // 多选题计分
-    handelMultipleChoice (id) {
+    handelMultipleChoice (arr) {
+      let index = arr[1]
       if (
-        id in this.userSelect &&
-        this.userSelect[id].length >= 2
+        index in this.userSelect &&
+        this.userSelect[index].length >= 2
       ) {
-        var answer = this.thisTestData[id].正确答案
-        var select = this.userSelect[id]
+        var answer = this.thisTestData(arr[0]).正确答案
+        var select = this.userSelect[index]
         var selectNo = false
         var selectYes = []
         var shakeOptions = []
@@ -304,9 +320,9 @@ export default {
             shakeOptions.push(td)
           }
         }
-        this.$set(this.shakeOptions, [id], shakeOptions)
+        this.$set(this.shakeOptions, [index], shakeOptions)
         setTimeout(() => {
-          this.$delete(this.shakeOptions, [id])
+          this.$delete(this.shakeOptions, [index])
         }, 2000)
         if (shakeOptions.length > 0) _functions.vibrate()
         // 答对切换下一题
@@ -315,18 +331,22 @@ export default {
             this.swiper.slideNext()
           }, 500)
         }
-        this.setOptionSelect([this.TestDataIndex, id, select, fraction])
+        this.setRandomOptionSelect([this.TestDataIndex, index, select, fraction])
       }
     },
-    showAnswer (id) {
+    showAnswer (index) {
       return (
-        id in this.UserData[this.TestDataIndex].data &&
-        this.UserData[this.TestDataIndex].data[id].userSelect.length > 0
+        index in this.UserData.Random[this.TestDataIndex].data.record &&
+        this.UserData.Random[this.TestDataIndex].data.record[index].userSelect.length > 0
       )
     },
-    getAnswerAndFraction (id) {
-      if (this.showAnswer(id)) {
-        return [this.thisTestData[id].正确答案, this.UserData[this.TestDataIndex].data[id].fraction]
+    getAnswerAndFraction (arr) {
+      let index = arr[1]
+      if (this.showAnswer(index)) {
+        return [
+          this.thisTestData(arr[0]).正确答案,
+          this.UserData.Random[this.TestDataIndex].data.record[index].fraction
+        ]
       }
     },
     handelKeydown (e) {
@@ -358,23 +378,25 @@ export default {
           break
       }
     },
-    showUserNote (id) {
+    showUserNote (arr) {
+      let id = arr[0][1]
+      let index = arr[1]
       return (
-        id in this.UserData[this.TestDataIndex].data &&
-        this.UserData[this.TestDataIndex].data[id].userSelect.length > 0 &&
-        this.TestDataIndex in this.UserNote &&
-        id in this.UserNote[this.TestDataIndex] &&
-        this.UserNote[this.TestDataIndex][id] !== ''
+        index in this.UserData.Random[this.TestDataIndex].data.record &&
+        this.UserData.Random[this.TestDataIndex].data.record[index].userSelect.length > 0 &&
+        arr[0][0] in this.UserNote &&
+        id in this.UserNote[arr[0][0]] &&
+        this.UserNote[arr[0][0]][id] !== ''
       )
     },
-    userNoteContent (id) {
+    userNoteContent (arr) {
       var userNote = ''
       if (
-        this.TestDataIndex in this.UserNote &&
-        id in this.UserNote[this.TestDataIndex] &&
-        this.UserNote[this.TestDataIndex][id] !== ''
+        arr[0] in this.UserNote &&
+        arr[1] in this.UserNote[arr[0]] &&
+        this.UserNote[arr[0]][arr[1]] !== ''
       ) {
-        userNote = this.UserNote[this.TestDataIndex][id]
+        userNote = this.UserNote[arr[0]][arr[1]]
       }
       return (
         '<p style="padding-bottom: .1rem;border-bottom: #eee 1px solid;font-weight: 900;">我的笔记</0>' +
@@ -388,34 +410,61 @@ export default {
         list.push('swiper-no-swiping')
       }
       return list
+    },
+    TestTiming () {
+      this.setRandomTestTiming(this.TestDataIndex)
+    },
+    _activated () {
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) {
+        this.computeShowList()
+        if (
+          Object.keys(this.UserData.Random[this.TestDataIndex].data.record).length <
+          this.UserData.Random[this.TestDataIndex].data.Test.length
+        ) {
+          this.Interval = setInterval(this.TestTiming, 1000)
+        }
+      }
+      window.addEventListener('keydown', this.handelKeydown)
+    },
+    _deactivated () {
+      if (this.Interval) {
+        clearInterval(this.Interval)
+        this.Interval = null
+      }
+      window.removeEventListener('keydown', this.handelKeydown)
     }
   },
   watch: {
     lastIndex () {
-      this.computeShowList()
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) {
+        this.computeShowList()
+      }
     },
-    listenKeydown () {
-      switch (this.listenKeydown) {
-        case true:
-          window.addEventListener('keydown', this.handelKeydown)
-          break
-        case false:
-          window.removeEventListener('keydown', this.handelKeydown)
-          break
+    finishRandomTest () {
+      if (this.finishRandomTest === true) {
+        clearInterval(this.Interval)
+        this.Interval = null
       }
     }
   },
   mounted () {
     // swiper on方法中this作用域发生变化，故拷贝一份过去
     this.swiper._this = this
-    this.computeShowList()
-    window.addEventListener('keydown', this.handelKeydown)
   },
   activated () {
     // 当重新选择题库回到页面时，重新渲染，把多选题预选清空
     if (this.lastTestDataIndex !== this.TestDataIndex) {
-      this.computeShowList()
       this.userSelect = {}
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) this.computeShowList()
     }
   }
 }

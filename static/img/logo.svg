@@ -1,0 +1,18 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="200px" height="200px" viewBox="0 0 200 200">
+<defs/>
+
+<g id="___1">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g>
+<path stroke="#4390EE" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 30 170
+L 100 100 0 100
+M 100 0
+L 100 100 170 30
+M 200 100
+L 100 100 100 200"/>
+</g>
+</g>
+</g>
+</svg>

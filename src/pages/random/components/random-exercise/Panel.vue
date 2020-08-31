@@ -20,20 +20,17 @@
     </div>
     <div class="content" ref="wrapper">
       <div>
-        <template v-for="(type, className) of classList">
-          <div class="className" :key="className">{{className}}</div>
-          <template v-for="(range, typeName) of type">
-            <div class="type" :key="className + '_' + typeName">{{typeName}}</div>
-            <div class="idBox" :key="className + '_' + typeName + 'Box'">
-              <span
-                :class="indexClassName(id)"
-                v-for="id of range"
-                :key="id"
-                :ref="id"
-                @click="jumpTest(id + 1)"
-              >{{id + 1}}</span>
-            </div>
-          </template>
+        <template v-if="hasData" v-for="(arr, title) of TestList">
+          <div class="TestTitle" :key="title">{{title}}</div>
+          <div class="idBox" :key="title + 'Box'">
+            <span
+              v-for="TestArr of arr"
+              :key="TestArr[1]"
+              :ref="TestArr[1]"
+              :class="indexClassName(TestArr)"
+              @click="jumpTest(TestArr[1] * 1 + 1)"
+            >{{(TestArr[0][1] * 1 + 1)}}</span>
+          </div>
         </template>
       </div>
     </div>
@@ -45,36 +42,43 @@ import { mapState } from 'vuex'
 import Bscroll from 'better-scroll'
 import _functions from '@functions/_functions'
 export default {
-  name: 'ExercisePanel',
+  name: 'RandomExercisePanel',
   props: {
-    DistributeData: {
-      default: [0, 0, 100],
-      validator (e) {
-        return typeof (e[0] * 1) === 'number' && typeof (e[1] * 1) === 'number' && typeof (e[2] * 1) === 'number'
-      }
-    }
+    TestDataIndex: Number
   },
   data () {
     return {
       gotoIndex: '',
-      classList: {}
+      TestList: {}
     }
   },
   watch: {
     TestDataIndex () {
-      this.computeClassList()
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) this.computeTestList()
     }
   },
   computed: {
     ...mapState(['TestData', 'UserData', 'UserNote']),
-    TestDataIndex () {
-      return this.DistributeData[0]
-    },
     lastIndex () {
-      return this.DistributeData[1]
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) return this.UserData.Random[this.TestDataIndex].lastIndex * 1
     },
     maxIndex () {
-      return this.DistributeData[2]
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) return this.UserData.Random[this.TestDataIndex].data.Test.length
+    },
+    hasData () {
+      return (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      )
     }
   },
   methods: {
@@ -101,19 +105,20 @@ export default {
     jumpTest (id) {
       id = typeof id === 'number' ? id : this.gotoIndex
       // 避免rewrite后内容为数字类型，无法判断length
-      var strId = this.gotoIndex + ''
+      let strId = this.gotoIndex + ''
       if (strId.length > 0 || id) {
         this.$emit('jumpTest', id)
         this.gotoIndex = ''
         this.$refs.indexInput.blur()
       }
     },
-    indexClassName (id) {
-      var list = ['index']
-      var lastIndex = this.UserData[this.TestDataIndex].lastIndex
-      if (lastIndex === id) list.push(['activeIndex', 'iconfont'])
-      if (id in this.UserData[this.TestDataIndex].data) {
-        var fraction = this.UserData[this.TestDataIndex].data[id].fraction
+    indexClassName (arr) {
+      const id = arr[0][1]
+      const index = arr[1]
+      const list = ['index']
+      if (this.lastIndex === index) list.push(['activeIndex', 'iconfont'])
+      if (index in this.UserData.Random[this.TestDataIndex].data.record) {
+        const fraction = this.UserData.Random[this.TestDataIndex].data.record[index].fraction
         switch (fraction) {
           case 1:
             list.push('select-yes')
@@ -125,7 +130,7 @@ export default {
             list.push('select-half')
         }
       }
-      if (this.TestDataIndex in this.UserNote && id in this.UserNote[this.TestDataIndex]) {
+      if (arr[0][0] in this.UserNote && id in this.UserNote[arr[0][0]]) {
         list.push(['has-note', 'iconfont'])
       }
       return list
@@ -137,7 +142,6 @@ export default {
       window.addEventListener('keydown', this.handelKeydown)
       this.$nextTick(() => {
         this.scroll.refresh()
-        console.log(this.lastIndex)
         const el = this.$refs[this.lastIndex][0]
         this.scroll.scrollToElement(el, 0, 0, -260)
       })
@@ -146,36 +150,35 @@ export default {
       window.removeEventListener('keydown', this.handelKeydown)
     },
     handelKeydown (e) {
-      var keyCode = e.keyCode
+      const keyCode = e.keyCode
       switch (keyCode) {
         case 27: // Esc键
           this.closePanel()
           break
       }
     },
-    computeClassList () {
-      var list = {}
-      var classData = this.TestData[this.TestDataIndex].class
-      for (var className in classData) {
-        if (!(className in list)) list[className] = {}
-        for (var type in classData[className]) {
-          var range = classData[className][type]
-          type = type.split('_')[1]
-          if (!(type in list[className])) list[className][type] = []
-          for (var i = range[0]; i <= range[1]; i++) {
-            list[className][type].push(i)
-          }
-        }
-      }
-      this.classList = list
+    computeTestList () {
+      const list = {}
+      const TestData = this.UserData.Random[this.TestDataIndex].data.Test
+      TestData.forEach((e, i) => {
+        const thisTitle = this.TestData[e[0]].title
+        if (!(thisTitle in list)) list[thisTitle] = []
+        list[thisTitle].push([e, i])
+      })
+      this.TestList = list
     }
   },
   mounted () {
-    this.computeClassList()
-    this.scroll = new Bscroll(this.$refs.wrapper, {
-      click: true,
-      mouseWheel: true
-    })
+    if (
+      'Random' in this.UserData &&
+      this.TestDataIndex in this.UserData.Random
+    ) {
+      this.computeTestList()
+      this.scroll = new Bscroll(this.$refs.wrapper, {
+        click: true,
+        mouseWheel: true
+      })
+    }
   }
 }
 </script>
@@ -262,7 +265,7 @@ export default {
       > div
         padding: .95rem .2rem 0
         cursor: default
-        .className
+        .TestTitle
           margin: .2rem 0 .1rem
           height: .95rem
           line-height: .95rem
@@ -271,11 +274,6 @@ export default {
           color: #333
           background-color: #eee
           text-align: center
-        .type
-          padding: .2rem 0 .1rem
-          border-bottom: #eee 1px solid
-          font-size: .35rem
-          text-indent: .2rem
         .idBox
           display: flex
           display: -webkit-flex /*Safari*/

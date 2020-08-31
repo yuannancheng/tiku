@@ -13,7 +13,6 @@ export default {
   },
   methods: {
     backExercise () {
-      console.log(this.fromUrl)
       if (this.fromUrl === '') {
         this.$router.push('/exercise/')
       } else {

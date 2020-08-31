@@ -34,7 +34,7 @@ export default {
   methods: {
     ...mapMutations(['TestDataOnload']), // 将this.$store.dispatch()映射成this.TestDataOnload(),同理还有 ...mapMutations
     getTestData () {
-      axios.get('/api/TestData.json')
+      axios.get('./static/TestData.min.json')
         .then(this.getTestDataSuccess)
     },
     getTestDataSuccess (res) {

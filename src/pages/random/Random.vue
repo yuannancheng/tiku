@@ -1,10 +1,26 @@
 <template>
   <div class="random">
-    <random-header :fromUrl="fromUrl"></random-header>
-    <random-body @changeShowCreate="changeShowCreate"></random-body>
+    <random-header v-show="!showExercise" :fromUrl="fromUrl"></random-header>
+    <random-body
+      v-show="!showExercise"
+      @changeShowCreate="changeShowCreate"
+      @changeTestDataIndex="changeTestDataIndex"
+      @changeShowExercise="changeShowExercise"
+    ></random-body>
     <transition name="create">
-      <random-create v-show="showCreate" @changeShowCreate="changeShowCreate"></random-create>
+      <random-create
+        v-show="showCreate"
+        @changeShowCreate="changeShowCreate"
+        @changeTestDataIndex="changeTestDataIndex"
+        @changeShowExercise="changeShowExercise"
+      ></random-create>
     </transition>
+    <random-exercise
+      v-show="showExercise"
+      :showExercise="showExercise"
+      :TestDataIndex="TestDataIndex"
+      @changeShowExercise="changeShowExercise"
+    ></random-exercise>
   </div>
 </template>
 
@@ -12,22 +28,32 @@
 import RandomHeader from './components/Header'
 import RandomBody from './components/Body'
 import RandomCreate from './components/Create'
+import RandomExercise from './components/RandomExercise'
 export default {
   name: 'Random',
   components: {
     RandomHeader,
     RandomBody,
-    RandomCreate
+    RandomCreate,
+    RandomExercise
   },
   data () {
     return {
       fromUrl: '',
-      showCreate: false
+      showCreate: false,
+      showExercise: false,
+      TestDataIndex: 0
     }
   },
   methods: {
     changeShowCreate (value) {
       this.showCreate = value
+    },
+    changeShowExercise (value) {
+      this.showExercise = value
+    },
+    changeTestDataIndex (value) {
+      this.TestDataIndex = value
     }
   },
   beforeRouteEnter (to, from, next) {

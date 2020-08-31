@@ -90,18 +90,79 @@ export default {
     const initData = {
       'create': createTime,
       'duration': duration,
+      'lastIndex': 0,
       'data': {
         'Test': Test,
         'record': {}
       }
     }
     if (!('Random' in state.UserData)) state.UserData.Random = []
-    state.UserData.Random.push(initData)
+    state.UserData.Random.unshift(initData)
     state.UserData = Object.assign({}, state.UserData)
-    console.log('初始化随机数据完成')
   },
-  setRandomData (state, data) {
-    // const TestDataId = data[0]
-    // const index = data[1]
+  deleteRandomData (state, id) {
+    state.UserData.Cacher = {
+      'id': id,
+      'data': state.UserData.Random[id]
+    }
+    state.UserData.Random.splice(id, 1)
+    state.UserData = Object.assign({}, state.UserData)
+  },
+  revokeDeleteRandomData (state) {
+    if ('Cacher' in state.UserData) {
+      state.UserData.Random.splice(state.UserData.Cacher.id, 0, state.UserData.Cacher.data)
+      delete state.UserData.Cacher
+      state.UserData = Object.assign({}, state.UserData)
+    }
+  },
+  removeDeleteCacher (state) {
+    if ('Cacher' in state.UserData) {
+      delete state.UserData.Cacher
+      state.UserData = Object.assign({}, state.UserData)
+    }
+  },
+  setRandomDataLastIndex (state, arr) {
+    state.UserData.Random[arr[0]].lastIndex = arr[1]
+    state.UserData = Object.assign({}, state.UserData)
+  },
+  setRandomOptionSelect (state, arr) {
+    state.UserData.Random[arr[0]].data.record[arr[1]] = {
+      'userSelect': arr[2],
+      'fraction': arr[3]
+    }
+    state.UserData = Object.assign({}, state.UserData)
+  },
+  setRandomTestTiming (state, index) {
+    state.UserData.Random[index].duration += 1000
+    state.UserData = Object.assign({}, state.UserData)
+  },
+  importBackUpData (state, data) {
+    const UD = data.UserData
+    const UN = data.UserNote
+    for (let key1 in UD) {
+      let value1 = UD[key1]
+      if (!(key1 in state.UserData)) {
+        state.UserData[key1] = {
+          'lastIndex': 0,
+          'data': {}
+        }
+      }
+      state.UserData[key1].lastIndex = value1.lastIndex
+      for (let key2 in value1.data) {
+        let value2 = value1.data[key2]
+        state.UserData[key1].data[key2] = value2
+      }
+    }
+    if ('Random' in UD) state.UserData.Random = UD.Random
+    for (let key1 in UN) {
+      let value1 = UN[key1]
+      for (let key2 in value1) {
+        let value2 = value1[key2]
+        if (!(key1 in state.UserNote)) state.UserNote[key1] = {}
+        state.UserNote[key1][key2] = value2
+      }
+    }
+    state.UserData = Object.assign({}, state.UserData)
+    state.UserNote = Object.assign({}, state.UserNote)
   }
 }

@@ -27,8 +27,7 @@
             v-model="rangeLeft"
             type="number"
             @focus="inputFocus"
-            @blur="inputBlur"
-            @input="rewriteLfet"
+            @blur="inputBlur();rewriteLfet()"
           />
           -
           <input
@@ -36,8 +35,7 @@
             v-model="rangeRight"
             type="number"
             @focus="inputFocus"
-            @blur="inputBlur"
-            @input="rewriteRight"
+            @blur="inputBlur();rewriteRight()"
           />
         </div>
         <div class="length">
@@ -71,7 +69,8 @@ export default {
       rangeLeft: '',
       rangeRight: '',
       length: '',
-      showSelectList: false
+      showSelectList: false,
+      creating: false
     }
   },
   watch: {
@@ -159,23 +158,24 @@ export default {
       }, 10)
     },
     rewriteLfet () {
-      let rewrite = this.rangeLeft.replace(/[^0-9]/g, '')
+      let rewrite = (this.rangeLeft + '').replace(/[^0-9]/g, '')
       if (this.selectTest.length > 0) {
         let maxLength = this.TestData[this.selectTest[0]].data.length
         // rewrite必须位于[1, max - 1] 且小于right
         if (rewrite.length === 0) rewrite = ''
         else if (this.rangeRight.length === 0) {
-          if (rewrite * 1 > maxLength - 1) rewrite = maxLength - 1
+          if (rewrite * 1 > maxLength * 1 - 1) rewrite = maxLength * 1 - 1
           if (rewrite * 1 < 1) rewrite = 1
         } else {
           if (rewrite * 1 < 1) rewrite = 1
-          if (rewrite * 1 > this.rangeRight - 1) rewrite = this.rangeRight - 1
+          if (rewrite * 1 > this.rangeRight * 1 - 1) rewrite = this.rangeRight * 1 - 1
         }
       }
       this.rangeLeft = rewrite
+      this.rewriteLength()
     },
     rewriteRight () {
-      let rewrite = this.rangeRight.replace(/[^0-9]/g, '')
+      let rewrite = (this.rangeRight + '').replace(/[^0-9]/g, '')
       if (this.selectTest.length > 0) {
         let maxLength = this.TestData[this.selectTest[0]].data.length
         // rewrite必须位于[2, max] 且大于left
@@ -185,13 +185,14 @@ export default {
           if (rewrite * 1 < 2) rewrite = 2
         } else {
           if (rewrite * 1 > maxLength) rewrite = maxLength
-          if (rewrite * 1 < this.rangeLeft + 1) rewrite = this.rangeLeft + 1
+          if (rewrite * 1 < this.rangeLeft * 1 + 1) rewrite = this.rangeLeft * 1 + 1
         }
       }
       this.rangeRight = rewrite
+      this.rewriteLength()
     },
     rewriteLength () {
-      let rewrite = this.length.replace(/[^0-9]/g, '')
+      let rewrite = (this.length + '').replace(/[^0-9]/g, '')
       if (rewrite.length > 0) {
         let numLength = 0
         this.selectTest.forEach((e) => {
@@ -216,6 +217,8 @@ export default {
         alert('数量至少为1')
         return
       }
+      if (this.creating) return
+      this.creating = true
       let countMax = 0
       const distribution = {}
       let CountDistribution = 0
@@ -231,10 +234,13 @@ export default {
       if (CountDistribution < this.length) distribution[0] += 1
       for (const key in distribution) {
         const thisLength = distribution[key]
-        const thisMax = this.TestData[key].data.length
+        let i = 0
+        let thisMax = this.TestData[key].data.length
         const arr = []
         let thisResult = []
-        for (let i = 0; i < thisMax; i++) {
+        if (this.rangeLeft !== '') i = this.rangeLeft
+        if (this.rangeRight !== '') thisMax = this.rangeRight
+        for (; i < thisMax; i++) {
           arr.push(i)
         }
         for (let i = 0; i < thisLength; i++) {
@@ -252,7 +258,9 @@ export default {
       this.rangeRight = ''
       this.length = ''
       this.closeCreate()
-      // 后面再接启动答题界面的函数
+      this.$emit('changeTestDataIndex', 0)
+      this.$emit('changeShowExercise', true)
+      this.creating = false
     }
   },
   directives: {

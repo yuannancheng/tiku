@@ -23,21 +23,9 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 export default {
-  name: 'NoteEdit',
+  name: 'RandomNoteEdit',
   props: {
-    TestDataIndex: {
-      default: 0,
-      validator (e) {
-        return typeof (e * 1) === 'number'
-      }
-    },
-    lastIndex: {
-      default: 0,
-      validator (e) {
-        return typeof (e * 1) === 'number'
-      }
-    },
-    showEdit: Boolean
+    TestDataIndex: Number
   },
   data () {
     return {
@@ -50,30 +38,44 @@ export default {
     }
   },
   computed: {
-    ...mapState(['UserNote'])
+    ...mapState(['UserData', 'UserNote']),
+    lastIndex () {
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) return this.UserData.Random[this.TestDataIndex].lastIndex
+      return 0
+    },
+    TestArr () {
+      if (
+        'Random' in this.UserData &&
+        this.TestDataIndex in this.UserData.Random
+      ) return this.UserData.Random[this.TestDataIndex].data.Test[this.lastIndex]
+    }
   },
   methods: {
     ...mapMutations(['setUserNote']),
     loadLocalStorage () {
       if (
-        this.TestDataIndex in this.UserNote &&
-        this.lastIndex in this.UserNote[this.TestDataIndex]
+        typeof this.TestArr === 'object' &&
+        this.TestArr[0] in this.UserNote &&
+        this.TestArr[1] in this.UserNote[this.TestArr[0]]
       ) {
-        this.noteContent = this.UserNote[this.TestDataIndex][this.lastIndex]
+        this.noteContent = this.UserNote[this.TestArr[0]][this.TestArr[1]]
       } else {
         this.noteContent = ''
       }
     },
     submit () {
       if (
-        this.TestDataIndex in this.UserNote &&
-        this.lastIndex in this.UserNote[this.TestDataIndex]
+        this.TestArr[0] in this.UserNote &&
+        this.TestArr[1] in this.UserNote[this.TestArr[0]]
       ) {
-        if (this.noteContent !== this.UserNote[this.TestDataIndex][this.lastIndex]) {
-          this.setUserNote([this.TestDataIndex, this.lastIndex, this.noteContent])
+        if (this.noteContent !== this.UserNote[this.TestArr[0]][this.TestArr[1]]) {
+          this.setUserNote([this.TestArr[0], this.TestArr[1], this.noteContent])
         }
       } else if (this.noteContent !== '') {
-        this.setUserNote([this.TestDataIndex, this.lastIndex, this.noteContent])
+        this.setUserNote([this.TestArr[0], this.TestArr[1], this.noteContent])
       }
       this.$emit('changeShowEdit', false)
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="home-list">
+  <div v-if="hasData" class="home-list">
     <transition-group name="TestInfo" appear>
       <div
         v-for="(item, index) of TestData"
@@ -39,7 +39,10 @@ export default {
   },
   computed: {
     // 将this.$store.state.TestData映射成this.TestData
-    ...mapState(['TestData', 'UserNote'])
+    ...mapState(['TestData', 'UserNote']),
+    hasData () {
+      return this.TestData.length > 0
+    }
   },
   methods: {
     ...mapMutations(['changeShowDeleteBtn', 'deleteTestData']),
@@ -60,7 +63,7 @@ export default {
         var hasNote = []
         if (id in this.UserNote) {
           for (var key in this.UserNote[id]) {
-            hasNote.push(--key + 1)
+            hasNote.push(key * 1 + 1)
           }
         }
         if (hasNote.length !== 0) {
