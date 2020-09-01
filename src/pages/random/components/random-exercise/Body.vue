@@ -572,4 +572,6 @@ export default {
         max-width: 980px
         margin: 0 auto
         padding: 30px
+        & *
+         font-size: .34rem
 </style>

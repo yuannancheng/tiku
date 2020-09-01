@@ -218,6 +218,10 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    color: #ca0c16;
+}
+
 ::-webkit-scrollbar {
     display: none;
 }
