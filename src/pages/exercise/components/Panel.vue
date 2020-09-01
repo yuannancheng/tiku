@@ -125,7 +125,7 @@ export default {
             list.push('select-half')
         }
       }
-      if (this.TestDataIndex in this.UserNote && id in this.UserNote[this.TestDataIndex]) {
+      if (this.TestDataIndex in this.UserNote && id in this.UserNote[this.TestDataIndex] && this.UserNote[this.TestDataIndex][id] !== '') {
         list.push(['has-note', 'iconfont'])
       }
       return list

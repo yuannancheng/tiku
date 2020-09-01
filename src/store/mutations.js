@@ -158,8 +158,10 @@ export default {
       let value1 = UN[key1]
       for (let key2 in value1) {
         let value2 = value1[key2]
-        if (!(key1 in state.UserNote)) state.UserNote[key1] = {}
-        state.UserNote[key1][key2] = value2
+        if (value2 !== '') {
+          if (!(key1 in state.UserNote)) state.UserNote[key1] = {}
+          state.UserNote[key1][key2] = value2
+        }
       }
     }
     state.UserData = Object.assign({}, state.UserData)
