@@ -10,6 +10,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 
 const env = require('../config/prod.env')
 
@@ -115,7 +117,39 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    
+    // Vue使用sw.js，来源：https://www.cnblogs.com/flicat/p/10655958.html
+    new SWPrecacheWebpackPlugin({
+      cacheId: 'tiku_v2',
+      filename: 'sw.js',
+      staticFileGlobs: ['dist/**/*.{js,html,css,json,ico,svg,png}'],
+      minify: true,
+      stripPrefix: 'dist/'
+    }),
+
+    new WebpackPwaManifest({
+      name: '理论题库刷题',
+      short_name: '理论刷题',
+      description: '理论题库刷题',
+      display: "standalone",
+      start_url: "/tiku_v2/index.html",
+      theme_color: "#4390EE",
+      background_color: '#ffffff',
+      crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
+      icons: [ // 桌面图标，是一个数组
+        {
+          src: path.resolve('static/img/logo.svg'),
+          sizes: "256x256",  // 以空格分隔的图片尺寸
+          type: "image/svg"  // 帮助userAgent快速排除不支持的类型
+        },
+        {
+          src: path.resolve('static/img/logo.png'),
+          sizes: "256x256",
+          type: "image/png"
+        }
+      ]
+    })
   ]
 })
 

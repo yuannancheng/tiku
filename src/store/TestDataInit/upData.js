@@ -20,12 +20,6 @@ export function upData (state, TestData) {
         e['data'].forEach((e1, i1) => {
           var newTestData = TestData[thisDefaultDataIndex]['data'][i1]
           // 判断题目、正确答案、选项、题型等信息有无改变，无则跳过。即进行增量更新。
-          if (e1['题型'] !== ['题型']) {
-            if (window.e1 == null && window.e2 == null) {
-              window.e1 = e1['题型']
-              window.e2 = newTestData['题型']
-            }
-          }
           if (
             e1['title'] !== newTestData['title'] ||
             e1['正确答案'].join(',') !== newTestData['正确答案'].join(',') ||
@@ -82,7 +76,7 @@ export function upData (state, TestData) {
     str += '\n以上题目答题记录已重置，不影响其他题目。'
 
     // 将更改后的UseData存储到store中，App.vue会监听到改变并自动存储到本地
-    state.UserData = UserData
+    state.TestData = TestData
 
     alert(str)
   }
