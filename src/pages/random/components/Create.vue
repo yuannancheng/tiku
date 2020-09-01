@@ -238,9 +238,9 @@ export default {
         let thisMax = this.TestData[key].data.length
         const arr = []
         let thisResult = []
-        if (this.rangeLeft !== '') i = this.rangeLeft
+        if (this.rangeLeft !== '') i = this.rangeLeft - 1
         if (this.rangeRight !== '') thisMax = this.rangeRight
-        for (; i <= thisMax; i++) {
+        for (; i < thisMax; i++) {
           arr.push(i)
         }
         for (let i = 0; i < thisLength; i++) {

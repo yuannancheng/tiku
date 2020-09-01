@@ -48,10 +48,6 @@ export default {
   mounted () {
     this.getTestData()
     // window.addEventListener('touchmove', function (event) { event.preventDefault()} , { passive: false })
-  },
-  upDated (n, o) {
-    console.log('upDataed', n)
-    console.log('upDataed', o)
   }
 }
 </script>

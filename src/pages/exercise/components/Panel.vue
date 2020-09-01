@@ -137,7 +137,6 @@ export default {
       window.addEventListener('keydown', this.handelKeydown)
       this.$nextTick(() => {
         this.scroll.refresh()
-        console.log(this.lastIndex)
         const el = this.$refs[this.lastIndex][0]
         this.scroll.scrollToElement(el, 0, 0, -260)
       })
