@@ -249,31 +249,29 @@ export default {
       let index = arr[1]
       // var el = event.toElement
       let thisUserData = this.UserData.Random[this.TestDataIndex].data.record
+      if (
+        index in thisUserData &&
+        thisUserData[index].userSelect.length > 0
+      ) return // 已经选择过答案，不能触发
       switch (type) {
         case '判断':
         case '单选':
-          if (
-            index in thisUserData &&
-            thisUserData[index].userSelect.length > 0
-          ) return false // 已经选择过答案，不能触发
-          else {
-            var fraction = 0
-            if (this.thisTestData(arr[0]).正确答案.includes(options)) {
-              fraction = 1
-            } else {
-              this.$set(this.shakeOptions, [index], options)
-              setTimeout(() => {
-                this.$delete(this.shakeOptions, [index])
-              }, 2000)
-              _functions.vibrate() // 答错震动
-            }
-            if (fraction === 1) {
-              setTimeout(() => {
-                this.swiper.slideNext()
-              }, 500)
-            }
-            this.setRandomOptionSelect([this.TestDataIndex, this.lastIndex, options, fraction])
+          var fraction = 0
+          if (this.thisTestData(arr[0]).正确答案.includes(options)) {
+            fraction = 1
+          } else {
+            this.$set(this.shakeOptions, [index], options)
+            setTimeout(() => {
+              this.$delete(this.shakeOptions, [index])
+            }, 2000)
+            _functions.vibrate() // 答错震动
           }
+          if (fraction === 1) {
+            setTimeout(() => {
+              this.swiper.slideNext()
+            }, 500)
+          }
+          this.setRandomOptionSelect([this.TestDataIndex, this.lastIndex, options, fraction])
           break
         case '多选':
           if (index in this.userSelect) {

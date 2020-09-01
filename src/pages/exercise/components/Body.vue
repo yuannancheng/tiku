@@ -234,31 +234,29 @@ export default {
     handelOptionSelect (id, type, options) {
       // var el = event.toElement
       var thisUserData = this.UserData[this.TestDataIndex].data
+      if (
+        id in thisUserData &&
+        thisUserData[id].userSelect.length > 0
+      ) return // 已经选择过答案，不能触发
       switch (type) {
         case '判断':
         case '单选':
-          if (
-            id in thisUserData &&
-            thisUserData[id].userSelect.length > 0
-          ) return false // 已经选择过答案，不能触发
-          else {
-            var fraction = 0
-            if (this.thisTestData[id].正确答案.includes(options)) {
-              fraction = 1
-            } else {
-              this.$set(this.shakeOptions, [id], options)
-              setTimeout(() => {
-                this.$delete(this.shakeOptions, [id])
-              }, 2000)
-              _functions.vibrate() // 答错震动
-            }
-            if (fraction === 1) {
-              setTimeout(() => {
-                this.swiper.slideNext()
-              }, 500)
-            }
-            this.setOptionSelect([this.TestDataIndex, this.lastIndex, options, fraction])
+          var fraction = 0
+          if (this.thisTestData[id].正确答案.includes(options)) {
+            fraction = 1
+          } else {
+            this.$set(this.shakeOptions, [id], options)
+            setTimeout(() => {
+              this.$delete(this.shakeOptions, [id])
+            }, 2000)
+            _functions.vibrate() // 答错震动
           }
+          if (fraction === 1) {
+            setTimeout(() => {
+              this.swiper.slideNext()
+            }, 500)
+          }
+          this.setOptionSelect([this.TestDataIndex, this.lastIndex, options, fraction])
           break
         case '多选':
           if (id in this.userSelect) {

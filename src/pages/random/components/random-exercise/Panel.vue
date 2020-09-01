@@ -140,6 +140,12 @@ export default {
         this.$refs.indexInput.focus()
       }
       window.addEventListener('keydown', this.handelKeydown)
+      if (!this.scroll) {
+        this.scroll = new Bscroll(this.$refs.wrapper, {
+          click: true,
+          mouseWheel: true
+        })
+      }
       this.$nextTick(() => {
         this.scroll.refresh()
         const el = this.$refs[this.lastIndex][0]
