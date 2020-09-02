@@ -1,7 +1,7 @@
 import { register } from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {
-  register('sw.js?v=202009011428', {
+  register('sw.js', {
     ready () {
       console.log(
         '应用程序正在由Service worker从缓存中提供。'
