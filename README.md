@@ -2,20 +2,21 @@
 
 > 理论题库
 
-## Build Setup
+# 这是一个Vue的学习项目
 
-``` bash
-# install dependencies
-npm install
+这个项目可以作为一个刷题工具——只要你按照模板生成属于自己的题库文件，然后导入，就可以开始使用了。
 
-# serve with hot reload at localhost:8080
-npm run dev
+# Demo
 
-# build for production with minification
-npm run build
+演示地址：https://showtime.applinzi.com/tiku_v2
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
+# 其他
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+- 项目使用了Service Worker，可以在离线状态下完美运行。
+- 通过这个项目我初步学习了Vue和PWA技术。
+- PWA真的是很棒的技术！！！它让Web应用拥有了和原生APP相差无几的使用体验。
+- 因为是第一次用Webpack，整个项目显得有些拙劣。。。凑合着用吧！
+
+---
+
+没有更多了

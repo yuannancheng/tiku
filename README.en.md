@@ -1,36 +1,24 @@
-# Tiku
+# tiku
 
-#### Description
-理论题库
+> Theory Question Bank
 
-#### Software Architecture
-Software architecture description
+# This is a Vue learning project
 
-#### Installation
+This project can be used as a tool for brushing questions-as long as you generate your own question bank file according to the template, and then import it, you can start using it.
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+# Demo
 
-#### Instructions
+Demo address: https://showtime.applinzi.com/tiku_v2
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+# Other
 
-#### Contribution
+- The project uses Service Worker, which can run perfectly offline.
+- Through this project, I initially learned Vue and PWA technology.
+- PWA is really great technology! ! ! It allows web applications to have the same experience as native apps.
+- Because it is the first time to use Webpack, the whole project seems a bit clumsy. . . Make do with it!
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+---
 
+No more
 
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+>  Because my English is very poor, this article was completely converted by Google Translate
