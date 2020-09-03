@@ -432,6 +432,8 @@ export default {
         clearInterval(this.Interval)
         this.Interval = null
       }
+      // 如果退出了答题界面，清空预选
+      this.userSelect = {}
       window.removeEventListener('keydown', this.handelKeydown)
     }
   },

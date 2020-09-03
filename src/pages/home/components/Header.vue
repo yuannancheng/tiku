@@ -30,7 +30,7 @@
                 type="file"
                 @change="importFileAddressChange"
                 multiple
-                accept=".json"
+                accept="application/json"
               />
             </li>
             <li @click="handelDownloadTool">下载工具</li>

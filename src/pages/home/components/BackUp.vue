@@ -9,7 +9,7 @@
           class="importFileBtn"
           type="file"
           @change="importFileAddressChange"
-          accept=".json"
+          accept="application/json"
         />
       </div>
       <div class="tip">
@@ -44,6 +44,7 @@ export default {
       document.body.appendChild(element)
       element.click()
       document.body.removeChild(element)
+      this.handelClose()
     },
     importFileAddressChange (e) {
       let _this = this
@@ -66,6 +67,7 @@ export default {
             // 数据合格
             _this.importBackUpData(thisData)
             _this.handelClose()
+            alert('数据恢复成功')
           } else {
             alert('\'' + file.name + '\' 不是预期的文件')
           }
@@ -73,7 +75,6 @@ export default {
       } else {
         alert('\'' + file.name + '\' 不是json格式的文件')
       }
-      // this.moreListShow = false
     }
   }
 }
