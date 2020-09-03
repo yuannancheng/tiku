@@ -8,7 +8,7 @@ This project can be used as a tool for brushing questions-as long as you generat
 
 # Demo
 
-Demo address: https://showtime.applinzi.com/tiku_v2
+Demo address: https://yuannancheng.github.io/tiku_v2
 
 # Other
 
