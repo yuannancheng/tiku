@@ -1,6 +1,6 @@
-# tiku
+# tiku_v2
 
-> Theory Question Bank
+> Theory Question Bank Version 2
 
 # This is a Vue learning project
 
