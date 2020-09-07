@@ -10,7 +10,7 @@
 <script>
 import axios from 'axios'
 import { mapState, mapMutations } from 'vuex'
-import { localStorageSetItem } from './store/TestDataInit/localStorageSetItem'
+import _functions from '@functions/_functions'
 import HotKey from './pages/HotKey'
 export default {
   name: 'App',
@@ -22,13 +22,13 @@ export default {
   },
   watch: {
     TestData () {
-      localStorageSetItem('TestData', this.TestData)
+      _functions.localStorageSetItem('TestData', this.TestData)
     },
     UserNote () {
-      localStorageSetItem('UserNote', this.UserNote)
+      _functions.localStorageSetItem('UserNote', this.UserNote)
     },
     UserData () {
-      localStorageSetItem('UserData', this.UserData)
+      _functions.localStorageSetItem('UserData', this.UserData)
     }
   },
   methods: {

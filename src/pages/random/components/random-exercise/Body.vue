@@ -133,7 +133,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setRandomDataLastIndex', 'setRandomOptionSelect', 'setRandomTestTiming']),
+    ...mapMutations(['setRandomDataLastIndex', 'setRandomOptionSelect']),
     thisTestData (arr) {
       if (
         'Random' in this.UserData &&
@@ -410,7 +410,10 @@ export default {
       return list
     },
     TestTiming () {
-      this.setRandomTestTiming(this.TestDataIndex)
+      // this.setRandomTestTiming(this.TestDataIndex)
+      let oldTime = this.UserData.Random[this.TestDataIndex].duration
+      this.$set(this.UserData.Random[this.TestDataIndex], 'duration', oldTime + 1000)
+      _functions.localStorageSetItem('UserData', this.UserData)
     },
     _activated () {
       if (

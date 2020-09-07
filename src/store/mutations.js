@@ -132,10 +132,6 @@ export default {
     }
     state.UserData = Object.assign({}, state.UserData)
   },
-  setRandomTestTiming (state, index) {
-    state.UserData.Random[index].duration += 1000
-    state.UserData = Object.assign({}, state.UserData)
-  },
   importBackUpData (state, data) {
     const UD = data.UserData
     const UN = data.UserNote

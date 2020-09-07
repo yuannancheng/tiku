@@ -187,7 +187,7 @@ export default {
           cursor: pointer
           &>*
             display: inline-block
-            width: 2rem
+            min-width: 2rem
             font-size: .34rem
             margin: .1rem
           .createTime
