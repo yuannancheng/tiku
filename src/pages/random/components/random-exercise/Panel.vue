@@ -72,7 +72,7 @@ export default {
       if (
         'Random' in this.UserData &&
         this.TestDataIndex in this.UserData.Random
-      ) return this.UserData.Random[this.TestDataIndex].data.Test.length
+      ) return this.UserData.Random[this.TestDataIndex].data.Test.length - 1
     },
     hasData () {
       return (

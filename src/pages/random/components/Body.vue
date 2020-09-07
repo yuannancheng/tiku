@@ -201,6 +201,7 @@ export default {
             position: absolute
             display: inline-block
             width: .5rem
+            min-width: 0
             height: .5rem
             right: 0
             top: 0
