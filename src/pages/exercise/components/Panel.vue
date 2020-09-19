@@ -82,7 +82,7 @@ export default {
       this.$emit('changeShowPanel', false)
     },
     rewriteGotoIndex () {
-      var rewrite = this.gotoIndex.replace(/[^0-9]/g, '')
+      let rewrite = this.gotoIndex.replace(/[^0-9]/g, '')
       // 使rewrite = int([1:maxIndex])|''
       rewrite = rewrite.length === 0 ? '' : rewrite * 1 > this.maxIndex + 1 ? this.maxIndex + 1 : rewrite * 1 > 0 ? rewrite : ''
       this.gotoIndex = rewrite
@@ -101,7 +101,7 @@ export default {
     jumpTest (id) {
       id = typeof id === 'number' ? id : this.gotoIndex
       // 避免rewrite后内容为数字类型，无法判断length
-      var strId = this.gotoIndex + ''
+      let strId = this.gotoIndex + ''
       if (strId.length > 0 || id) {
         this.$emit('jumpTest', id)
         this.gotoIndex = ''
@@ -109,11 +109,11 @@ export default {
       }
     },
     indexClassName (id) {
-      var list = ['index']
-      var lastIndex = this.UserData[this.TestDataIndex].lastIndex
+      let list = ['index']
+      let lastIndex = this.UserData[this.TestDataIndex].lastIndex
       if (lastIndex === id) list.push(['activeIndex', 'iconfont'])
       if (id in this.UserData[this.TestDataIndex].data) {
-        var fraction = this.UserData[this.TestDataIndex].data[id].fraction
+        let fraction = this.UserData[this.TestDataIndex].data[id].fraction
         switch (fraction) {
           case 1:
             list.push('select-yes')
@@ -145,7 +145,7 @@ export default {
       window.removeEventListener('keydown', this.handelKeydown)
     },
     handelKeydown (e) {
-      var keyCode = e.keyCode
+      let keyCode = e.keyCode
       switch (keyCode) {
         case 27: // Esc键
           this.closePanel()
@@ -153,20 +153,32 @@ export default {
       }
     },
     computeClassList () {
-      var list = {}
-      var classData = this.TestData[this.TestDataIndex].class
-      for (var className in classData) {
+      let list = {}
+      let flag = ['', '', []]
+      let classData = this.TestData[this.TestDataIndex].class
+      for (let className in classData) {
         if (!(className in list)) list[className] = {}
-        for (var type in classData[className]) {
-          var range = classData[className][type]
+        for (let type in classData[className]) {
+          let range = classData[className][type]
           type = type.split('_')[1]
           if (!(type in list[className])) list[className][type] = []
-          for (var i = range[0]; i <= range[1]; i++) {
+          for (let i = range[0]; i <= range[1]; i++) {
             list[className][type].push(i)
+            flag[2].push(i)
           }
+          flag[1] = type
         }
+        flag[0] = className
       }
+      let TestData = this.TestData[this.TestDataIndex].data
+      TestData.forEach((e) => {
+        let thisId = e.id
+        if (!flag[2].includes(thisId)) {
+          list[flag[0]][flag[1]].push(thisId)
+        }
+      })
       this.classList = list
+      console.log(list)
     }
   },
   mounted () {
