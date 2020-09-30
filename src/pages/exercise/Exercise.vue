@@ -48,6 +48,7 @@
         ref="Seach"
         :TestDataIndex="TestDataIndex"
         @changeShowSeach="changeShowSeach"
+        @changeBodyListenKeydown="changeBodyListenKeydown"
         @jumpTest="jumpTest"
       ></exercise-seach>
     </transition>
@@ -211,6 +212,10 @@ export default {
       } else if (value === false) {
         this.BodyListenKeydown = true
       }
+    },
+    changeBodyListenKeydown (value) {
+      value = typeof value === 'boolean' ? value : !this.BodyListenKeydown
+      this.BodyListenKeydown = value
     }
   },
   activated () {

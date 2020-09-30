@@ -178,7 +178,6 @@ export default {
         }
       })
       this.classList = list
-      console.log(list)
     }
   },
   mounted () {

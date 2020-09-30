@@ -247,7 +247,7 @@ export default {
           let ran = Math.floor(Math.random() * arr.length)
           thisResult.push(arr.splice(ran, 1)[0])
         }
-        thisResult = thisResult.sort((a, b) => { return a - b })
+        // thisResult = thisResult.sort((a, b) => { return a - b }) 排序
         thisResult.forEach((e) => {
           result.push([key, e])
         })

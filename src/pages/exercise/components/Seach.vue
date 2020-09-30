@@ -60,7 +60,8 @@ export default {
     },
     seachContent () {
       this.scroll.refresh()
-      this.changeShowContent(true)
+      this.showContent = true
+      this.ctrlBtnIcon = '&#xe6ed;'
     }
   },
   computed: {
@@ -83,6 +84,7 @@ export default {
         className.push('more')
       } else {
         className.push('less')
+        this.$emit('changeBodyListenKeydown', true)
       }
       return className
     },
@@ -104,8 +106,10 @@ export default {
       this.showContent = value
       if (value === true) {
         this.ctrlBtnIcon = '&#xe6ed;'
+        this.$emit('changeBodyListenKeydown', false)
       } else if (value === false) {
         this.ctrlBtnIcon = '&#xe6ec;'
+        this.$emit('changeBodyListenKeydown', true)
       }
     },
     stopPrevent (e) {
@@ -164,7 +168,7 @@ export default {
     },
     jumpTest (id) {
       this.$refs.input.blur()
-      this.changeShowContent()
+      this.changeShowContent(false)
       this.$emit('jumpTest', id)
     },
     escapeRegExp (text) {

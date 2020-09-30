@@ -75,7 +75,7 @@ export function upData (state, TestData) {
 
       updata[key].forEach((e) => {
         if (UserData && key in UserData && 'data' in UserData[key]) {
-          delete UserData[key].data[e]
+          delete UserData[key].data[e - 1]
         }
       })
     }
@@ -84,8 +84,8 @@ export function upData (state, TestData) {
     // 将更改后的UseData存储到store中，App.vue会监听到改变并自动存储到本地
     state.TestData = TestData
 
-    // alert(str)
+    alert(str)
     // 不是重大更新就后台静默更新，不提醒用户
-    console.log(str)
+    // console.log(str)
   }
 }
