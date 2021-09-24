@@ -77,7 +77,7 @@ export default {
     },
     handelDownloadTool () {
       if (confirm('将要下载题库提取工具（约15MB），是否继续？')) {
-        window.location.href = 'http://sinacloud.net/myfiles/tiku/%E9%A2%98%E5%BA%93%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7.zip'
+        window.location.href = 'https://sinacloud.net/myfiles/tiku/%E9%A2%98%E5%BA%93%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7.zip'
       }
     },
     handelChangeShowBackUp () {
