@@ -193,4 +193,5 @@ export default {
               position: absolute
               top: 0
               right: 0
+              opacity: 0
 </style>
