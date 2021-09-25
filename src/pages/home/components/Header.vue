@@ -33,8 +33,8 @@
                 accept="application/json"
               />
             </li>
-            <li @click="handelDownloadTool">下载工具</li>
-            <li @click="handelChangeShowBackUp">备份/恢复</li>
+            <li @click="handelChangeShowBackUp">备份恢复</li>
+            <li @click="handelGotoRepo">项目源码</li>
           </ul>
         </div>
       </transition>
@@ -44,7 +44,7 @@
 
 <script>
 import clickoutside from '@functions/clickoutside'
-import _functions from '@functions/_functions'
+// import _functions from '@functions/_functions'  // 打开QQ
 import { mapMutations } from 'vuex'
 export default {
   name: 'HomeHeader',
@@ -56,6 +56,10 @@ export default {
       moreListShow: false,
       moreBtnContentStyle: {
         fontSize: '.45rem'
+      },
+      localtions: {
+        repo: 'https://gitee.com/yuannancheng/Tiku',
+        issues: 'https://gitee.com/yuannancheng/Tiku/issues'
       }
     }
   },
@@ -71,14 +75,18 @@ export default {
   methods: {
     ...mapMutations(['importTestData']),
     handleFeedBackClick () {
-      if (confirm('发现问题了？\n快来告诉我吧！')) {
-        _functions.CallQQ(1470983522)
-      }
+      // if (confirm('发现问题了？\n快来告诉我吧！')) {
+      //   _functions.CallQQ(1470983522)
+      // }
+      window.open(this.$data.localtions.issues)
     },
     handelDownloadTool () {
       if (confirm('将要下载题库提取工具（约15MB），是否继续？')) {
         window.location.href = 'https://sinacloud.net/myfiles/tiku/858CF572.zip'
       }
+    },
+    handelGotoRepo () {
+      window.open(this.$data.localtions.repo)
     },
     handelChangeShowBackUp () {
       this.$emit('changeShowBackUp', true)

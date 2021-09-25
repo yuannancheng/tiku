@@ -232,7 +232,7 @@ export default {
     },
     // 处理计算分数/绑定预选
     handelOptionSelect (id, type, options) {
-      // var el = event.toElement
+      // var el = event.srcElement ? event.srcElement : event.target
       var thisUserData = this.UserData[this.TestDataIndex].data
       if (
         id in thisUserData &&
@@ -285,7 +285,7 @@ export default {
         var selectNo = false
         var selectYes = []
         var shakeOptions = []
-        var el = event.toElement
+        var el = event.srcElement ? event.srcElement : event.target
         select.forEach((e) => {
           if (answer.includes(e)) selectYes.push(e)
           else selectNo = true

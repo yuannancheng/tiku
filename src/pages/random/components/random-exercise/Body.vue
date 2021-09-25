@@ -247,7 +247,7 @@ export default {
     // 处理计算分数/绑定预选
     handelOptionSelect (arr, type, options) {
       let index = arr[1]
-      // var el = event.toElement
+      // var el = event.srcElement ? event.srcElement : event.target
       let thisUserData = this.UserData.Random[this.TestDataIndex].data.record
       if (
         index in thisUserData &&
@@ -301,7 +301,7 @@ export default {
         var selectNo = false
         var selectYes = []
         var shakeOptions = []
-        var el = event.toElement
+        var el = event.srcElement ? event.srcElement : event.target
         select.forEach((e) => {
           if (answer.includes(e)) selectYes.push(e)
           else selectNo = true
