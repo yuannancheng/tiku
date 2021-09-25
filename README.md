@@ -8,7 +8,7 @@
 
 # Demo
 
-演示地址：https://yuannancheng.com/tiku_v2
+演示地址：https://showtime.applinzi.com/tiku_v2
 
 # 其他
 
