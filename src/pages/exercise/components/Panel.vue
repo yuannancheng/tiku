@@ -154,6 +154,11 @@ export default {
     },
     computeClassList () {
       let list = {}
+      /* flag 变量:
+       * [最后一个解析的课程名, 最后一个解析的题型名, 所有解析过的题号]
+       * 用于在最后扫描是否有漏了的题目，如果有遗漏，就把遗漏的加入到答题卡的最后
+       * 此功能最开始用于解决 TestData.class 内的题型索引不能更新导致新插入的题目不能出现在答题卡上
+       */
       let flag = ['', '', []]
       let classData = this.TestData[this.TestDataIndex].class
       for (let className in classData) {
@@ -162,7 +167,11 @@ export default {
           let range = classData[className][type]
           type = type.split('_')[1]
           if (!(type in list[className])) list[className][type] = []
-          for (let i = range[0]; i <= range[1]; i++) {
+          /*
+           * 当某类型只有一题时，拿到的就是 [23] 这种 range，此时要判断有无第二项
+           * 亦可使用 i <= (range[1] || range[0])
+           */
+          for (let i = range[0]; i <= range.slice(-1); i++) {
             list[className][type].push(i)
             flag[2].push(i)
           }
@@ -170,6 +179,9 @@ export default {
         }
         flag[0] = className
       }
+      /*
+       * 扫描是否有遗漏的题目
+      */
       let TestData = this.TestData[this.TestDataIndex].data
       TestData.forEach((e) => {
         let thisId = e.id
