@@ -57,7 +57,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/tiku_v2/',
+    assetsPublicPath: process.env.assets_public_path || '/tiku_v2/', // 在线上流水线构建时，可以配置环境变量 assets_public_path 以支持应用部署在其他目录，比如 '/'
 
     /**
      * Source Maps

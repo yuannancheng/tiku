@@ -140,7 +140,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       short_name: '理论刷题',
       description: '理论题库刷题',
       display: "standalone",
-      start_url: "/tiku_v2/index.html",
+      start_url: process.env.assets_public_path || '/tiku_v2/' + "index.html", // 在线上流水线构建时，可以配置环境变量 assets_public_path 以支持应用部署在其他目录，比如 '/'
       theme_color: "#4390EE",
       background_color: '#ffffff',
       crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
