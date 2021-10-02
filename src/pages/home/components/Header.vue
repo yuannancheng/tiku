@@ -58,8 +58,8 @@ export default {
         fontSize: '.45rem'
       },
       localtions: {
-        repo: 'https://gitee.com/yuannancheng/Tiku',
-        issues: 'https://gitee.com/yuannancheng/Tiku/issues'
+        repo: 'https://gitee.com/yuannancheng/tiku',
+        issues: 'https://gitee.com/yuannancheng/tiku/issues'
       }
     }
   },
